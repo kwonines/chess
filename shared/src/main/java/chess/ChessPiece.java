@@ -11,8 +11,12 @@ import java.util.Collection;
  */
 public class ChessPiece {
 
+
+
     public ChessPiece(ChessGame.TeamColor pieceColor, ChessPiece.PieceType type) {
     }
+
+
 
     /**
      * The various different chess piece options
@@ -48,6 +52,8 @@ public class ChessPiece {
      * @return Collection of valid moves
      */
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
-        return new ArrayList<>();
+        BishopMoveCalculator calc = new BishopMoveCalculator();
+        return calc.availableMoves(board, myPosition);
+
     }
 }
