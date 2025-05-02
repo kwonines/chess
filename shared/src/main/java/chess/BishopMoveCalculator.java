@@ -51,8 +51,4 @@ public class BishopMoveCalculator implements MoveCalculator {
             return BishopMoveCalculator.spaceType.ENEMY;
         } else return BishopMoveCalculator.spaceType.ALLY;
     }
-
-    private enum spaceType {
-        EMPTY, ENEMY, ALLY
-    }
 }

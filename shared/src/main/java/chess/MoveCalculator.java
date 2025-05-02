@@ -3,5 +3,6 @@ package chess;
 import java.util.ArrayList;
 
 public interface MoveCalculator {
-    public ArrayList<ChessMove> availableMoves(ChessBoard board, ChessPiece self, ChessPosition position);
+    ArrayList<ChessMove> availableMoves(ChessBoard board, ChessPiece self, ChessPosition position);
+    enum spaceType {EMPTY, ENEMY, ALLY}
 }
