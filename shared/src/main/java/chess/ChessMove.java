@@ -23,7 +23,7 @@ public class ChessMove {
 
     @Override
     public String toString() {
-        return  ", end=" + endPosition + '}';
+        return "end {" + endPosition + '}';
     }
 
     @Override

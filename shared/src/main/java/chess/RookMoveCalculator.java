@@ -66,10 +66,6 @@ public class RookMoveCalculator implements MoveCalculator {
         } else return spaceType.ALLY;
     }
 
-    private enum spaceType {
-        EMPTY, ENEMY, ALLY
-    }
-
     //used to simplify, returns a ChessMove given one position and one set of coordinate
     private ChessMove makeMove(ChessPosition startPosition, int row, int col) {
         ChessPosition newPosition = new ChessPosition(row, col);

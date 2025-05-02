@@ -44,11 +44,11 @@ public class BishopMoveCalculator implements MoveCalculator {
 
     //given a row and column, checks to see if the space is occupied.
     //If the space is occupied, checks to see if the occupying piece is the same color as the given piece or not.
-    private BishopMoveCalculator.spaceType findSpaceType(ChessBoard board, ChessPiece self, ChessPosition space) {
+    private MoveCalculator.spaceType findSpaceType(ChessBoard board, ChessPiece self, ChessPosition space) {
         if(board.getPiece(space) == null) {
-            return BishopMoveCalculator.spaceType.EMPTY;
+            return MoveCalculator.spaceType.EMPTY;
         } else if (board.getPiece(space).getTeamColor() != self.getTeamColor()) {
-            return BishopMoveCalculator.spaceType.ENEMY;
-        } else return BishopMoveCalculator.spaceType.ALLY;
+            return MoveCalculator.spaceType.ENEMY;
+        } else return MoveCalculator.spaceType.ALLY;
     }
 }

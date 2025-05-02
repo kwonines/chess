@@ -1,6 +1,7 @@
 package chess;
 
 import java.util.Collection;
+import java.util.Objects;
 
 /**
  * Represents a single chess piece
@@ -17,6 +18,20 @@ public class ChessPiece {
     public ChessPiece(ChessGame.TeamColor pieceColor, ChessPiece.PieceType type) {
         this.pieceColor = pieceColor;
         this.type = type;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        ChessPiece that = (ChessPiece) o;
+        return pieceColor == that.pieceColor && type == that.type;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(pieceColor, type);
     }
 
     /**
@@ -60,6 +75,15 @@ public class ChessPiece {
             case KING:
                 KingMoveCalculator kCalc = new KingMoveCalculator();
                 return kCalc.availableMoves(board, this, myPosition);
+            case KNIGHT:
+                KnightMoveCalculator nCalc = new KnightMoveCalculator();
+                return nCalc.availableMoves(board, this, myPosition);
+            case PAWN:
+                PawnMoveCalculator pCalc = new PawnMoveCalculator();
+                return pCalc.availableMoves(board, this, myPosition);
+            case QUEEN:
+                QueenMoveCalculator qCalc = new QueenMoveCalculator();
+                return qCalc.availableMoves(board, this, myPosition);
             case ROOK:
                 RookMoveCalculator rCalc = new RookMoveCalculator();
                 return rCalc.availableMoves(board, this, myPosition);
