@@ -68,26 +68,31 @@ public class ChessPiece {
      * @return Collection of valid moves
      */
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
-        switch (this.type) {
-            case BISHOP:
+        return switch (this.type) {
+            case BISHOP -> {
                 BishopMoveCalculator bCalc = new BishopMoveCalculator();
-                return bCalc.availableMoves(board, this, myPosition);
-            case KING:
+                yield bCalc.availableMoves(board, this, myPosition);
+            }
+            case KING -> {
                 KingMoveCalculator kCalc = new KingMoveCalculator();
-                return kCalc.availableMoves(board, this, myPosition);
-            case KNIGHT:
+                yield kCalc.availableMoves(board, this, myPosition);
+            }
+            case KNIGHT -> {
                 KnightMoveCalculator nCalc = new KnightMoveCalculator();
-                return nCalc.availableMoves(board, this, myPosition);
-            case PAWN:
+                yield nCalc.availableMoves(board, this, myPosition);
+            }
+            case PAWN -> {
                 PawnMoveCalculator pCalc = new PawnMoveCalculator();
-                return pCalc.availableMoves(board, this, myPosition);
-            case QUEEN:
+                yield pCalc.availableMoves(board, this, myPosition);
+            }
+            case QUEEN -> {
                 QueenMoveCalculator qCalc = new QueenMoveCalculator();
-                return qCalc.availableMoves(board, this, myPosition);
-            case ROOK:
+                yield qCalc.availableMoves(board, this, myPosition);
+            }
+            case ROOK -> {
                 RookMoveCalculator rCalc = new RookMoveCalculator();
-                return rCalc.availableMoves(board, this, myPosition);
-            default: return null;
-        }
+                yield rCalc.availableMoves(board, this, myPosition);
+            }
+        };
     }
 }
