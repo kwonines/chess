@@ -2,54 +2,54 @@ package chess;
 
 import java.util.ArrayList;
 
-public class QueenMoveCalculator implements MoveCalculator {
+public class QueenMoveCalculator extends MoveCalculator {
     @Override
     public ArrayList<ChessMove> availableMoves(ChessBoard board, ChessPiece self, ChessPosition position) {
         ArrayList<ChessMove> moveList = new ArrayList<>();
 
         for (int row = position.getRow() + 1, col = position.getColumn() + 1; row < 9 && col < 9; row++, col++) {
-            if (insertValidMove(board, self, position, moveList, row, col)) {
+            if (insertMoveThenBreak(board, self, position, moveList, row, col)) {
                 break;
             }
         }
 
         for (int row = position.getRow() - 1, col = position.getColumn() + 1; row > 0 && col < 9; row--, col++) {
-            if (insertValidMove(board, self, position, moveList, row, col)) {
+            if (insertMoveThenBreak(board, self, position, moveList, row, col)) {
                 break;
             }
         }
 
         for (int row = position.getRow() - 1, col = position.getColumn() - 1; row > 0 && col > 0; row--, col--) {
-            if (insertValidMove(board, self, position, moveList, row, col)) {
+            if (insertMoveThenBreak(board, self, position, moveList, row, col)) {
                 break;
             }
         }
         for (int row = position.getRow() + 1, col = position.getColumn() - 1; row < 9 && col > 0; row++, col--) {
-            if (insertValidMove(board, self, position, moveList, row, col)) {
+            if (insertMoveThenBreak(board, self, position, moveList, row, col)) {
                 break;
             }
         }
 
         for (int row = position.getRow() + 1; row < 9; row++) {
-            if (insertValidMove(board, self, position, moveList, row, position.getColumn())) {
+            if (insertMoveThenBreak(board, self, position, moveList, row, position.getColumn())) {
                 break;
             }
         }
 
         for (int col = position.getColumn() + 1; col < 9; col++) {
-            if (insertValidMove(board, self, position, moveList, position.getRow(), col)) {
+            if (insertMoveThenBreak(board, self, position, moveList, position.getRow(), col)) {
                 break;
             }
         }
 
         for (int row = position.getRow() - 1; row > 0; row--) {
-            if (insertValidMove(board, self, position, moveList, row, position.getColumn())) {
+            if (insertMoveThenBreak(board, self, position, moveList, row, position.getColumn())) {
                 break;
             }
         }
 
         for (int col = position.getColumn() - 1; col > 0; col--) {
-            if (insertValidMove(board, self, position, moveList, position.getRow(), col)) {
+            if (insertMoveThenBreak(board, self, position, moveList, position.getRow(), col)) {
                 break;
             }
         }
@@ -61,7 +61,7 @@ public class QueenMoveCalculator implements MoveCalculator {
 
     //given a row and column to move to, will insert that as a move if the space is empty or occupied as an enemy.
     //If the space is an enemy, it will also return true. If the space is an ally, it will just return true.
-    private boolean insertValidMove(ChessBoard board, ChessPiece self, ChessPosition position, ArrayList<ChessMove> moveList, int row, int col) {
+    private boolean insertMoveThenBreak(ChessBoard board, ChessPiece self, ChessPosition position, ArrayList<ChessMove> moveList, int row, int col) {
         ChessPosition moveSpace;
         SpaceType moveSpaceType;
         moveSpace = new ChessPosition(row, col);
@@ -75,17 +75,5 @@ public class QueenMoveCalculator implements MoveCalculator {
             return true;
         }
         return false;
-    }
-
-    //given a row and column, checks to see if the space is occupied.
-    //If the space is occupied, checks to see if the occupying piece is the same color as the given piece or not.
-    private SpaceType findSpaceType(ChessBoard board, ChessPiece self, ChessPosition space) {
-        if(board.getPiece(space) == null) {
-            return SpaceType.EMPTY;
-        } else if (board.getPiece(space).getTeamColor() != self.getTeamColor()) {
-            return SpaceType.ENEMY;
-        } else {
-            return SpaceType.ALLY;
-        }
     }
 }

@@ -2,7 +2,7 @@ package chess;
 
 import java.util.ArrayList;
 
-public class PawnMoveCalculator implements MoveCalculator {
+public class PawnMoveCalculator extends MoveCalculator {
     @Override
     public ArrayList<ChessMove> availableMoves(ChessBoard board, ChessPiece self, ChessPosition position) {
         ArrayList<ChessMove> moveList = new ArrayList<>();
@@ -77,18 +77,6 @@ public class PawnMoveCalculator implements MoveCalculator {
             addPromotionMoves(position, moveList, moveSpace);
         } else if (isDiagonalValid(moveSpace, board, self)) {
             moveList.add(new ChessMove(position, moveSpace));
-        }
-    }
-
-    //given a row and column, checks to see if the space is occupied.
-    //If the space is occupied, checks to see if the occupying piece is the same color as the given piece or not.
-    private SpaceType findSpaceType(ChessBoard board, ChessPiece self, ChessPosition space) {
-        if(board.getPiece(space) == null) {
-            return SpaceType.EMPTY;
-        } else if (board.getPiece(space).getTeamColor() != self.getTeamColor()) {
-            return SpaceType.ENEMY;
-        } else {
-            return SpaceType.ALLY;
         }
     }
 

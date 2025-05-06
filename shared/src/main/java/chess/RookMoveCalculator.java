@@ -2,7 +2,7 @@ package chess;
 
 import java.util.ArrayList;
 
-public class RookMoveCalculator implements MoveCalculator {
+public class RookMoveCalculator extends MoveCalculator {
     @Override
     public ArrayList<ChessMove> availableMoves(ChessBoard board, ChessPiece self, ChessPosition position) {
         ArrayList<ChessMove> moveList = new ArrayList<>();
