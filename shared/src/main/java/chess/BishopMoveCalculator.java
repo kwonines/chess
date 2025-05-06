@@ -33,22 +33,26 @@ public class BishopMoveCalculator implements MoveCalculator {
     private boolean insertMove(ChessBoard board, ChessPiece self, ChessPosition position, ArrayList<ChessMove> moveList, int row, int col) {
         ChessPosition space;
         space = new ChessPosition(row, col);
-        if (findSpaceType(board, self, space) == spaceType.EMPTY) {
+        if (findSpaceType(board, self, space) == SpaceType.EMPTY) {
             moveList.add(new ChessMove(position, space));
-        } else if (findSpaceType(board, self, space) == spaceType.ENEMY) {
+        } else if (findSpaceType(board, self, space) == SpaceType.ENEMY) {
             moveList.add(new ChessMove(position, space));
             return true;
-        } else return true;
+        } else {
+            return true;
+        }
         return false;
     }
 
     //given a row and column, checks to see if the space is occupied.
     //If the space is occupied, checks to see if the occupying piece is the same color as the given piece or not.
-    private MoveCalculator.spaceType findSpaceType(ChessBoard board, ChessPiece self, ChessPosition space) {
+    private SpaceType findSpaceType(ChessBoard board, ChessPiece self, ChessPosition space) {
         if(board.getPiece(space) == null) {
-            return MoveCalculator.spaceType.EMPTY;
+            return SpaceType.EMPTY;
         } else if (board.getPiece(space).getTeamColor() != self.getTeamColor()) {
-            return MoveCalculator.spaceType.ENEMY;
-        } else return MoveCalculator.spaceType.ALLY;
+            return SpaceType.ENEMY;
+        } else {
+            return SpaceType.ALLY;
+        }
     }
 }

@@ -62,7 +62,8 @@ public class PawnMoveCalculator implements MoveCalculator {
         moveList.add(new ChessMove(position, moveSpace, ChessPiece.PieceType.KNIGHT));
     }
 
-    private void makeBlackDiagonalMove(ChessBoard board, ChessPiece self, ChessPosition position, ArrayList<ChessMove> moveList, ChessPosition moveSpace) {
+    private void makeBlackDiagonalMove(ChessBoard board, ChessPiece self, ChessPosition position,
+                                       ArrayList<ChessMove> moveList, ChessPosition moveSpace) {
         if (isDiagonalValid(moveSpace, board, self) && moveSpace.getRow() == 1) {
             addPromotionMoves(position, moveList, moveSpace);
         } else if (isDiagonalValid(moveSpace, board, self)) {
@@ -70,7 +71,8 @@ public class PawnMoveCalculator implements MoveCalculator {
         }
     }
 
-    private void makeWhiteDiagonalMove(ChessBoard board, ChessPiece self, ChessPosition position, ArrayList<ChessMove> moveList, ChessPosition moveSpace) {
+    private void makeWhiteDiagonalMove(ChessBoard board, ChessPiece self, ChessPosition position,
+                                       ArrayList<ChessMove> moveList, ChessPosition moveSpace) {
         if (isDiagonalValid(moveSpace, board, self) && moveSpace.getRow() == 8) {
             addPromotionMoves(position, moveList, moveSpace);
         } else if (isDiagonalValid(moveSpace, board, self)) {
@@ -80,23 +82,29 @@ public class PawnMoveCalculator implements MoveCalculator {
 
     //given a row and column, checks to see if the space is occupied.
     //If the space is occupied, checks to see if the occupying piece is the same color as the given piece or not.
-    private MoveCalculator.spaceType findSpaceType(ChessBoard board, ChessPiece self, ChessPosition space) {
+    private SpaceType findSpaceType(ChessBoard board, ChessPiece self, ChessPosition space) {
         if(board.getPiece(space) == null) {
-            return MoveCalculator.spaceType.EMPTY;
+            return SpaceType.EMPTY;
         } else if (board.getPiece(space).getTeamColor() != self.getTeamColor()) {
-            return MoveCalculator.spaceType.ENEMY;
-        } else return MoveCalculator.spaceType.ALLY;
+            return SpaceType.ENEMY;
+        } else {
+            return SpaceType.ALLY;
+        }
     }
 
     private boolean isDiagonalValid(ChessPosition space, ChessBoard board, ChessPiece self) {
         if (space.getRow() < 9 && space.getColumn() < 9 && space.getRow() > 0 && space.getColumn() > 0) {
-            return findSpaceType(board, self, space) == spaceType.ENEMY;
-        } else return false;
+            return findSpaceType(board, self, space) == SpaceType.ENEMY;
+        } else {
+            return false;
+        }
     }
 
     private boolean isForwardValid(ChessPosition space, ChessBoard board, ChessPiece self) {
         if (space.getRow() < 9 && space.getColumn() < 9 && space.getRow() > 0 && space.getColumn() > 0) {
-            return findSpaceType(board, self, space) == spaceType.EMPTY;
-        } else return false;
+            return findSpaceType(board, self, space) == SpaceType.EMPTY;
+        } else {
+            return false;
+        }
     }
 }

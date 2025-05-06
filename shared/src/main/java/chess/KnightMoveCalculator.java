@@ -8,53 +8,65 @@ public class KnightMoveCalculator implements MoveCalculator {
         ArrayList<ChessMove> moveList = new ArrayList<>();
         // ↑↑←
         ChessPosition moveSpace = new ChessPosition(position.getRow() + 2, position.getColumn() - 1);
-        if (isMoveValid(moveSpace, board, self))
+        if (isMoveValid(moveSpace, board, self)) {
             moveList.add(new ChessMove(position, moveSpace));
+        }
         // ↑↑→
         moveSpace = new ChessPosition(position.getRow() + 2, position.getColumn() + 1);
-        if (isMoveValid(moveSpace, board, self))
+        if (isMoveValid(moveSpace, board, self)) {
             moveList.add(new ChessMove(position, moveSpace));
+        }
         // →→↑
         moveSpace = new ChessPosition(position.getRow() + 1, position.getColumn() + 2);
-        if (isMoveValid(moveSpace, board, self))
+        if (isMoveValid(moveSpace, board, self)) {
             moveList.add(new ChessMove(position, moveSpace));
+        }
         // →→↓
         moveSpace = new ChessPosition(position.getRow() - 1, position.getColumn() + 2);
-        if (isMoveValid(moveSpace, board, self))
+        if (isMoveValid(moveSpace, board, self)) {
             moveList.add(new ChessMove(position, moveSpace));
+        }
         // ↓↓→
         moveSpace = new ChessPosition(position.getRow() - 2, position.getColumn() + 1);
-        if (isMoveValid(moveSpace, board, self))
+        if (isMoveValid(moveSpace, board, self)) {
             moveList.add(new ChessMove(position, moveSpace));
+        }
         // ↓↓←
         moveSpace = new ChessPosition(position.getRow() - 2, position.getColumn() - 1);
-        if (isMoveValid(moveSpace, board, self))
+        if (isMoveValid(moveSpace, board, self)) {
             moveList.add(new ChessMove(position, moveSpace));
+        }
         // ←←↓
         moveSpace = new ChessPosition(position.getRow() - 1, position.getColumn() - 2);
-        if (isMoveValid(moveSpace, board, self))
+        if (isMoveValid(moveSpace, board, self)) {
             moveList.add(new ChessMove(position, moveSpace));
+        }
         // ←←↑
         moveSpace = new ChessPosition(position.getRow() + 1, position.getColumn() - 2);
-        if (isMoveValid(moveSpace, board, self))
+        if (isMoveValid(moveSpace, board, self)) {
             moveList.add(new ChessMove(position, moveSpace));
+        }
         return moveList;
     }
 
     //given a row and column, checks to see if the space is occupied.
     //If the space is occupied, checks to see if the occupying piece is the same color as the given piece or not.
-    private MoveCalculator.spaceType findSpaceType(ChessBoard board, ChessPiece self, ChessPosition space) {
+    private SpaceType findSpaceType(ChessBoard board, ChessPiece self, ChessPosition space) {
         if(board.getPiece(space) == null) {
-            return MoveCalculator.spaceType.EMPTY;
+            return SpaceType.EMPTY;
         } else if (board.getPiece(space).getTeamColor() != self.getTeamColor()) {
-            return MoveCalculator.spaceType.ENEMY;
-        } else return MoveCalculator.spaceType.ALLY;
+            return SpaceType.ENEMY;
+        } else {
+            return SpaceType.ALLY;
+        }
     }
 
     //Checks to see if the knight can move to a given space on a board
     private boolean isMoveValid(ChessPosition space, ChessBoard board, ChessPiece self) {
         if (space.getRow() < 9 && space.getColumn() < 9 && space.getRow() > 0 && space.getColumn() > 0) {
-            return findSpaceType(board, self, space) != MoveCalculator.spaceType.ALLY;
-        } else return false;
+            return findSpaceType(board, self, space) != SpaceType.ALLY;
+        } else {
+            return false;
+        }
     }
 }

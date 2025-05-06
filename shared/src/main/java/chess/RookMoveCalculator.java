@@ -31,39 +31,45 @@ public class RookMoveCalculator implements MoveCalculator {
 
     //Used to add a move to the moveList array when given just a column to move to
     private boolean insertColumnMove(ChessBoard board, ChessPiece self, ChessPosition position, ArrayList<ChessMove> moveList, int col) {
-        spaceType space;
+        SpaceType space;
         space = isSpaceAvailable(board, self, position.getRow(), col);
-        if (space == spaceType.EMPTY) {
+        if (space == SpaceType.EMPTY) {
             moveList.add(makeMove(position, position.getRow(), col));
             return false;
-        } else if (space == spaceType.ENEMY) {
+        } else if (space == SpaceType.ENEMY) {
             moveList.add(makeMove(position, position.getRow(), col));
             return true;
-        } else return true;
+        } else {
+            return true;
+        }
     }
 
     //Used to add a move to the moveList array when given just a row to move to
     private boolean insertRowMove(ChessBoard board, ChessPiece self, ChessPosition position, ArrayList<ChessMove> moveList, int row) {
-        spaceType space;
+        SpaceType space;
         space = isSpaceAvailable(board, self, row, position.getColumn());
-        if (space == spaceType.EMPTY) {
+        if (space == SpaceType.EMPTY) {
             moveList.add(makeMove(position, row, position.getColumn()));
             return false;
-        } else if (space == spaceType.ENEMY) {
+        } else if (space == SpaceType.ENEMY) {
             moveList.add(makeMove(position, row, position.getColumn()));
             return true;
-        } else return true;
+        } else {
+            return true;
+        }
     }
 
     //given a row and column, checks to see if the space is occupied.
     //If the space is occupied, checks to see if the occupying piece is the same color as the given piece or not.
-    private spaceType isSpaceAvailable(ChessBoard board, ChessPiece self, int row, int col) {
+    private SpaceType isSpaceAvailable(ChessBoard board, ChessPiece self, int row, int col) {
         ChessPosition space = new ChessPosition(row, col);
         if(board.getPiece(space) == null) {
-            return spaceType.EMPTY;
+            return SpaceType.EMPTY;
         } else if (board.getPiece(space).getTeamColor() != self.getTeamColor()) {
-            return spaceType.ENEMY;
-        } else return spaceType.ALLY;
+            return SpaceType.ENEMY;
+        } else {
+            return SpaceType.ALLY;
+        }
     }
 
     //used to simplify, returns a ChessMove given one position and one set of coordinate
