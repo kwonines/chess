@@ -1,5 +1,6 @@
 package chess;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 /**
@@ -10,15 +11,18 @@ import java.util.Collection;
  */
 public class ChessGame {
 
-    public ChessGame() {
+    private TeamColor turn = TeamColor.WHITE;
+    ChessBoard board = new ChessBoard();
 
+    public ChessGame() {
+        board.resetBoard();
     }
 
     /**
      * @return Which team's turn it is
      */
     public TeamColor getTeamTurn() {
-        throw new RuntimeException("Not implemented");
+        return turn;
     }
 
     /**
@@ -27,7 +31,7 @@ public class ChessGame {
      * @param team the team whose turn it is
      */
     public void setTeamTurn(TeamColor team) {
-        throw new RuntimeException("Not implemented");
+        turn = team;
     }
 
     /**
@@ -39,14 +43,25 @@ public class ChessGame {
     }
 
     /**
-     * Gets a valid moves for a piece at the given location
+     * Gets valid moves for a piece at the given location
      *
      * @param startPosition the piece to get valid moves for
      * @return Set of valid moves for requested piece, or null if no piece at
      * startPosition
      */
     public Collection<ChessMove> validMoves(ChessPosition startPosition) {
-        throw new RuntimeException("Not implemented");
+        ChessPiece piece = board.getPiece(startPosition);
+        if (piece == null) {
+            return null;
+        } else if (getTeamTurn() != piece.getTeamColor()) {
+            return new ArrayList<>();
+        } else {
+            ArrayList<ChessMove> validMoveList = new ArrayList<>();
+            validMoveList.addAll(piece.pieceMoves(board, startPosition));
+
+
+            return validMoveList;
+        }
     }
 
     /**
@@ -56,6 +71,9 @@ public class ChessGame {
      * @throws InvalidMoveException if move is invalid
      */
     public void makeMove(ChessMove move) throws InvalidMoveException {
+        //if move is not in the validmove list, throw exception
+        //if promotion piece is null, set the endposition to the piece at start position, set the startposition piece to null;
+        //if the promotion piece != null, set the start position to null, set the end position to the promotion piece of same color
         throw new RuntimeException("Not implemented");
     }
 
@@ -96,7 +114,7 @@ public class ChessGame {
      * @param board the new board to use
      */
     public void setBoard(ChessBoard board) {
-        throw new RuntimeException("Not implemented");
+        this.board = board;
     }
 
     /**
@@ -105,6 +123,6 @@ public class ChessGame {
      * @return the chessboard
      */
     public ChessBoard getBoard() {
-        throw new RuntimeException("Not implemented");
+        return board;
     }
 }
