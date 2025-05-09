@@ -2,6 +2,7 @@ package chess;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
 
 /**
  * For a class that can manage a chess game, making moves on a board
@@ -50,14 +51,12 @@ public class ChessGame {
      * startPosition
      */
     public Collection<ChessMove> validMoves(ChessPosition startPosition) {
+        //work on isInCheck first
         ChessPiece piece = board.getPiece(startPosition);
         if (piece == null) {
             return null;
-        } else if (getTeamTurn() != piece.getTeamColor()) {
-            return new ArrayList<>();
         } else {
             ArrayList<ChessMove> validMoveList = new ArrayList<>();
-            validMoveList.addAll(piece.pieceMoves(board, startPosition));
 
 
             return validMoveList;
@@ -84,7 +83,26 @@ public class ChessGame {
      * @return True if the specified team is in check
      */
     public boolean isInCheck(TeamColor teamColor) {
-        throw new RuntimeException("Not implemented");
+        for (int row = 1; row < 9; row++) {
+            for (int col = 1; col < 9; col++) {
+                ChessPosition square = new ChessPosition(row, col);
+                ChessPiece piece = board.getPiece(square);
+                if (piece != null) {
+                    if (piece.getTeamColor() != teamColor) {
+                        Collection<ChessMove> moveList = piece.pieceMoves(board, square);
+                        for (ChessMove chessMove : moveList) {
+                            ChessPosition position = chessMove.getEndPosition();
+                            if (board.getPiece(position) != null) {
+                                if (board.getPiece(position).getPieceType() == ChessPiece.PieceType.KING) {
+                                    return true;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return false;
     }
 
     /**
