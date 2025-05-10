@@ -1,11 +1,10 @@
 package chess;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 
 /**
- * For a class that can manage a chess game, making moves on a board
+ * For a class that can manage a chess game, making moves on a gameBoard
  * <p>
  * Note: You can add to this class, but you may not alter
  * signature of the existing methods.
@@ -13,10 +12,10 @@ import java.util.Iterator;
 public class ChessGame {
 
     private TeamColor turn = TeamColor.WHITE;
-    ChessBoard board = new ChessBoard();
+    ChessBoard gameBoard = new ChessBoard();
 
     public ChessGame() {
-        board.resetBoard();
+        gameBoard.resetBoard();
     }
 
     /**
@@ -51,16 +50,33 @@ public class ChessGame {
      * startPosition
      */
     public Collection<ChessMove> validMoves(ChessPosition startPosition) {
-        //work on isInCheck first
-        ChessPiece piece = board.getPiece(startPosition);
+        ChessPiece piece = gameBoard.getPiece(startPosition);
         if (piece == null) {
             return null;
         } else {
-            ArrayList<ChessMove> validMoveList = new ArrayList<>();
+            Collection<ChessMove> validMoveList = piece.pieceMoves(gameBoard, startPosition);
+            Iterator<ChessMove> it = validMoveList.iterator();
+            while (it.hasNext()) {
+                ChessMove chessMove = it.next();
+                if (moveWillCheck(chessMove, gameBoard, piece)) {
+                    it.remove();
+                }
+            }
 
 
             return validMoveList;
         }
+    }
+
+    private boolean moveWillCheck(ChessMove move, ChessBoard simBoard, ChessPiece piece) {
+        ChessPiece originalPiece = simBoard.getPiece(move.getStartPosition());
+        ChessPiece capturePiece = simBoard.getPiece(move.getEndPosition());
+        simBoard.addPiece(move.getEndPosition(), originalPiece);
+        simBoard.addPiece(move.getStartPosition(), null);
+        boolean willMoveCheck = isInCheckOnBoard(piece.getTeamColor(), simBoard);
+        simBoard.addPiece(move.getStartPosition(), originalPiece);
+        simBoard.addPiece(move.getEndPosition(), capturePiece);
+        return willMoveCheck;
     }
 
     /**
@@ -83,6 +99,10 @@ public class ChessGame {
      * @return True if the specified team is in check
      */
     public boolean isInCheck(TeamColor teamColor) {
+        return isInCheckOnBoard(teamColor, gameBoard);
+    }
+
+    private boolean isInCheckOnBoard(TeamColor teamColor, ChessBoard board) {
         for (int row = 1; row < 9; row++) {
             for (int col = 1; col < 9; col++) {
                 ChessPosition square = new ChessPosition(row, col);
@@ -127,12 +147,12 @@ public class ChessGame {
     }
 
     /**
-     * Sets this game's chessboard with a given board
+     * Sets this game's chessboard with a given gameBoard
      *
-     * @param board the new board to use
+     * @param board the new gameBoard to use
      */
     public void setBoard(ChessBoard board) {
-        this.board = board;
+        this.gameBoard = board;
     }
 
     /**
@@ -141,6 +161,6 @@ public class ChessGame {
      * @return the chessboard
      */
     public ChessBoard getBoard() {
-        return board;
+        return gameBoard;
     }
 }

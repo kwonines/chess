@@ -18,7 +18,7 @@ public abstract class MoveCalculator {
         }
     }
 
-    //Checks to see if a piece can move to a given space on a board
+    //Checks to see if a piece can move to a given space on a gameBoard
     protected boolean isMoveValid(ChessPosition space, ChessBoard board, ChessPiece self) {
         if (space.getRow() < 9 && space.getColumn() < 9 && space.getRow() > 0 && space.getColumn() > 0) {
             return findSpaceType(board, self, space) != SpaceType.ALLY;

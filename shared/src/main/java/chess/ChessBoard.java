@@ -11,10 +11,10 @@ import java.util.Objects;
  */
 public class ChessBoard {
 
-    private final ChessPiece[][] board = new ChessPiece[9][9];
+    private final ChessPiece[][] board;
 
     public ChessBoard() {
-        
+        board = new ChessPiece[9][9];
     }
 
     @Override
@@ -53,7 +53,7 @@ public class ChessBoard {
     }
 
     /**
-     * Sets the board to the default starting board
+     * Sets the gameBoard to the default starting gameBoard
      * (How the game of chess normally starts)
      */
     public void resetBoard() {

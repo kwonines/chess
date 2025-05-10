@@ -3,7 +3,7 @@ package chess;
 import java.util.Objects;
 
 /**
- * Represents a single square position on a chess board
+ * Represents a single square position on a chess gameBoard
  * <p>
  * Note: You can add to this class, but you may not alter
  * signature of the existing methods.
