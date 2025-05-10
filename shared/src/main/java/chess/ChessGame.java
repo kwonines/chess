@@ -134,11 +134,7 @@ public class ChessGame {
      * @return True if the specified team is in checkmate
      */
     public boolean isInCheckmate(TeamColor teamColor) {
-        if (isInCheck(teamColor) && hasNoValidMoves(teamColor)) {
-            return true;
-        } else {
-            return false;
-        }
+        return isInCheck(teamColor) && hasNoValidMoves(teamColor);
     }
 
     /**
@@ -151,11 +147,7 @@ public class ChessGame {
     public boolean isInStalemate(TeamColor teamColor) {
         if (isInCheck(teamColor)) {
             return false;
-        } else if (hasNoValidMoves(teamColor)) {
-            return true;
-        } else {
-            return false;
-        }
+        } else return hasNoValidMoves(teamColor);
     }
 
     private boolean hasNoValidMoves(TeamColor teamColor) {
