@@ -1,7 +1,6 @@
 package chess;
 
 import java.util.Collection;
-import java.util.Iterator;
 
 /**
  * For a class that can manage a chess game, making moves on a gameBoard
@@ -55,27 +54,21 @@ public class ChessGame {
             return null;
         } else {
             Collection<ChessMove> validMoveList = piece.pieceMoves(gameBoard, startPosition);
-            Iterator<ChessMove> it = validMoveList.iterator();
-            while (it.hasNext()) {
-                ChessMove chessMove = it.next();
-                if (moveWillCheck(chessMove, gameBoard, piece)) {
-                    it.remove();
-                }
-            }
+            validMoveList.removeIf(chessMove -> moveWillCheck(chessMove, piece));
 
 
             return validMoveList;
         }
     }
 
-    private boolean moveWillCheck(ChessMove move, ChessBoard simBoard, ChessPiece piece) {
-        ChessPiece originalPiece = simBoard.getPiece(move.getStartPosition());
-        ChessPiece capturePiece = simBoard.getPiece(move.getEndPosition());
-        simBoard.addPiece(move.getEndPosition(), originalPiece);
-        simBoard.addPiece(move.getStartPosition(), null);
-        boolean willMoveCheck = isInCheckOnBoard(piece.getTeamColor(), simBoard);
-        simBoard.addPiece(move.getStartPosition(), originalPiece);
-        simBoard.addPiece(move.getEndPosition(), capturePiece);
+    private boolean moveWillCheck(ChessMove move, ChessPiece piece) {
+        ChessPiece originalPiece = gameBoard.getPiece(move.getStartPosition());
+        ChessPiece capturePiece = gameBoard.getPiece(move.getEndPosition());
+        gameBoard.addPiece(move.getEndPosition(), originalPiece);
+        gameBoard.addPiece(move.getStartPosition(), null);
+        boolean willMoveCheck = isInCheck(piece.getTeamColor());
+        gameBoard.addPiece(move.getStartPosition(), originalPiece);
+        gameBoard.addPiece(move.getEndPosition(), capturePiece);
         return willMoveCheck;
     }
 
@@ -99,21 +92,17 @@ public class ChessGame {
      * @return True if the specified team is in check
      */
     public boolean isInCheck(TeamColor teamColor) {
-        return isInCheckOnBoard(teamColor, gameBoard);
-    }
-
-    private boolean isInCheckOnBoard(TeamColor teamColor, ChessBoard board) {
         for (int row = 1; row < 9; row++) {
             for (int col = 1; col < 9; col++) {
                 ChessPosition square = new ChessPosition(row, col);
-                ChessPiece piece = board.getPiece(square);
+                ChessPiece piece = gameBoard.getPiece(square);
                 if (piece != null) {
                     if (piece.getTeamColor() != teamColor) {
-                        Collection<ChessMove> moveList = piece.pieceMoves(board, square);
+                        Collection<ChessMove> moveList = piece.pieceMoves(gameBoard, square);
                         for (ChessMove chessMove : moveList) {
                             ChessPosition position = chessMove.getEndPosition();
-                            if (board.getPiece(position) != null) {
-                                if (board.getPiece(position).getPieceType() == ChessPiece.PieceType.KING) {
+                            if (gameBoard.getPiece(position) != null) {
+                                if (gameBoard.getPiece(position).getPieceType() == ChessPiece.PieceType.KING) {
                                     return true;
                                 }
                             }
