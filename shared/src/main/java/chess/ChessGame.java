@@ -69,19 +69,20 @@ public class ChessGame {
             return null;
         } else {
             Collection<ChessMove> validMoveList = piece.pieceMoves(gameBoard, startPosition);
-            validMoveList.removeIf(chessMove -> moveWillCheck(chessMove, piece));
+            validMoveList.removeIf(this::moveWillCheck);
 
 
             return validMoveList;
         }
     }
 
-    private boolean moveWillCheck(ChessMove move, ChessPiece piece) {
+    //when given a move, checks if that move would put that piece's team in check. Leaves the board unchanged
+    private boolean moveWillCheck(ChessMove move) {
         ChessPiece originalPiece = gameBoard.getPiece(move.getStartPosition());
         ChessPiece capturePiece = gameBoard.getPiece(move.getEndPosition());
         gameBoard.addPiece(move.getEndPosition(), originalPiece);
         gameBoard.addPiece(move.getStartPosition(), null);
-        boolean willMoveCheck = isInCheck(piece.getTeamColor());
+        boolean willMoveCheck = isInCheck(originalPiece.getTeamColor());
         gameBoard.addPiece(move.getStartPosition(), originalPiece);
         gameBoard.addPiece(move.getEndPosition(), capturePiece);
         return willMoveCheck;
@@ -165,6 +166,7 @@ public class ChessGame {
         } else return hasNoValidMoves(teamColor);
     }
 
+    //Checks to see if the given team has any moves that would not leave them in check
     private boolean hasNoValidMoves(TeamColor teamColor) {
         for (int row = 1; row < 9; row++) {
             for (int col = 1; col < 9; col++) {
