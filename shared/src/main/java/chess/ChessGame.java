@@ -125,19 +125,24 @@ public class ChessGame {
             for (int col = 1; col < 9; col++) {
                 ChessPosition square = new ChessPosition(row, col);
                 ChessPiece piece = gameBoard.getPiece(square);
-                if (piece != null) {
-                    if (piece.getTeamColor() != teamColor) {
-                        Collection<ChessMove> moveList = piece.pieceMoves(gameBoard, square);
-                        for (ChessMove chessMove : moveList) {
-                            ChessPosition position = chessMove.getEndPosition();
-                            if (gameBoard.getPiece(position) != null) {
-                                if (gameBoard.getPiece(position).getPieceType() == ChessPiece.PieceType.KING) {
-                                    return true;
-                                }
-                            }
-                        }
+                if (piece != null && piece.getTeamColor() != teamColor) {
+                    if (pieceThreatensKing(piece, square)) {
+                        return true;
                     }
                 }
+            }
+        }
+        return false;
+    }
+
+    //given a piece at a position, returns true if any of that piece's possible moves end in capturing a king
+    private boolean pieceThreatensKing(ChessPiece piece, ChessPosition square) {
+        Collection<ChessMove> moveList = piece.pieceMoves(gameBoard, square);
+        for (ChessMove chessMove : moveList) {
+            ChessPosition position = chessMove.getEndPosition();
+            if (gameBoard.getPiece(position) != null &&
+                    gameBoard.getPiece(position).getPieceType() == ChessPiece.PieceType.KING) {
+                return true;
             }
         }
         return false;
@@ -163,7 +168,9 @@ public class ChessGame {
     public boolean isInStalemate(TeamColor teamColor) {
         if (isInCheck(teamColor)) {
             return false;
-        } else return hasNoValidMoves(teamColor);
+        } else {
+            return hasNoValidMoves(teamColor);
+        }
     }
 
     //Checks to see if the given team has any moves that would not leave them in check
