@@ -31,7 +31,7 @@ public class Server {
 
     private Object register(Request request, Response response) {
         var body = new Gson().fromJson(request.body(), RegisterRequest.class);
-        return new UserService().register(body);
+        return new Gson().toJson(new UserService().register(body));
     }
 
     public void stop() {
