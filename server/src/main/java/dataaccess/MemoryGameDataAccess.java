@@ -35,4 +35,9 @@ public class MemoryGameDataAccess implements GameDataAccess {
     public void updateGame(String playerColor, int gameID) {
 
     }
+
+    @Override
+    public void clear() {
+        games.clear();
+    }
 }

@@ -20,4 +20,9 @@ public class MemoryAuthDataAccess  implements AuthDataAccess {
     public void deleteAuth(String authToken) {
         authorizations.remove(authToken);
     }
+
+    @Override
+    public void clear() {
+        authorizations.clear();
+    }
 }

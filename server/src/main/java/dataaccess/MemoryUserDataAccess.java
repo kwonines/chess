@@ -16,4 +16,9 @@ public class MemoryUserDataAccess implements UserDataAccess {
     public void addUser(UserData userData) {
         users.put(userData.username(), userData);
     }
+
+    @Override
+    public void clear() {
+        users.clear();
+    }
 }

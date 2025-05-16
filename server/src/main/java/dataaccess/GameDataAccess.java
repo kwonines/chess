@@ -5,6 +5,7 @@ import model.GameData;
 import java.util.ArrayList;
 
 public interface GameDataAccess {
+    void clear();
     void addGame(GameData gameData);
     GameData findGame(int gameID);
     ArrayList<GameData> listGames();
