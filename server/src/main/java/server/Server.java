@@ -44,19 +44,17 @@ public class Server {
     private Object register(Request request, Response response) throws DataAccessException {
         Gson gson = new Gson();
         RegisterRequest body = gson.fromJson(request.body(), RegisterRequest.class);
-        String returnVal;
-        RegisterResult result = null;
+
         try {
-            result = userService.register(body);
-            returnVal = gson.toJson(result);
+            RegisterResult result = userService.register(body);
+            return gson.toJson(result);
         } catch (UsernameTakenException exception) {
             response.status(403);
-            return gson.toJson(new Error(exception.getMessage()));
+            return gson.toJson(new ErrorMessage(exception.getMessage()));
         } catch (BadRequestException exception) {
             response.status(400);
-            return gson.toJson(new Error(exception.getMessage()));
+            return gson.toJson(new ErrorMessage(exception.getMessage()));
         }
-        return returnVal;
     }
 
     public void stop() {
