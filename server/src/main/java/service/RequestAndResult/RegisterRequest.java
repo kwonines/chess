@@ -1,5 +1,3 @@
 package service.RequestAndResult;
 
-public record RegisterRequest(String username, String password, String email) {
-    public static record LogoutRequest(String authToken) {}
-}
+public record RegisterRequest(String username, String password, String email) {}

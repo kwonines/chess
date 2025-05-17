@@ -1,12 +1,22 @@
 package server;
 
 import com.google.gson.Gson;
+import dataaccess.DataAccessException;
 import service.ClearService;
 import service.RequestAndResult.RegisterRequest;
+import service.RequestAndResult.RegisterResult;
 import service.UserService;
 import spark.*;
 
 public class Server {
+
+    UserService userService;
+    ClearService clearService;
+
+    public Server() {
+        userService = new UserService();
+        clearService = new ClearService();
+    }
 
     public int run(int desiredPort) {
         Spark.port(desiredPort);
@@ -25,13 +35,24 @@ public class Server {
     }
 
     private Object clear(Request request, Response response) {
-        new ClearService().clearApplication();
+        clearService.clearApplication();
         return new Gson().toJson(null);
     }
 
-    private Object register(Request request, Response response) {
-        var body = new Gson().fromJson(request.body(), RegisterRequest.class);
-        return new Gson().toJson(new UserService().register(body));
+    private Object register(Request request, Response response) throws DataAccessException {
+        Gson gson = new Gson();
+        RegisterRequest body = gson.fromJson(request.body(), RegisterRequest.class);
+        String returnVal;
+        RegisterResult result = null;
+        try {
+            result = userService.register(body);
+            returnVal = gson.toJson(result);
+        } catch (DataAccessException e) {
+            response.status(403);
+            Error error = new Error(e.getMessage());
+            return gson.toJson(error);
+        }
+        return returnVal;
     }
 
     public void stop() {
