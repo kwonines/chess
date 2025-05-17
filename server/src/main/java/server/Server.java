@@ -1,7 +1,9 @@
 package server;
 
 import com.google.gson.Gson;
+import dataaccess.BadRequestException;
 import dataaccess.DataAccessException;
+import dataaccess.UsernameTakenException;
 import service.ClearService;
 import service.RequestAndResult.RegisterRequest;
 import service.RequestAndResult.RegisterResult;
@@ -47,10 +49,12 @@ public class Server {
         try {
             result = userService.register(body);
             returnVal = gson.toJson(result);
-        } catch (DataAccessException e) {
+        } catch (UsernameTakenException exception) {
             response.status(403);
-            Error error = new Error(e.getMessage());
-            return gson.toJson(error);
+            return gson.toJson(new Error(exception.getMessage()));
+        } catch (BadRequestException exception) {
+            response.status(400);
+            return gson.toJson(new Error(exception.getMessage()));
         }
         return returnVal;
     }
