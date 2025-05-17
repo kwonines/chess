@@ -1,9 +1,9 @@
 package server;
 
 import com.google.gson.Gson;
-import dataaccess.BadRequestException;
+import dataaccess.exceptions.BadRequestException;
 import dataaccess.DataAccessException;
-import dataaccess.UsernameTakenException;
+import dataaccess.exceptions.UsernameTakenException;
 import service.ClearService;
 import service.RequestAndResult.RegisterRequest;
 import service.RequestAndResult.RegisterResult;

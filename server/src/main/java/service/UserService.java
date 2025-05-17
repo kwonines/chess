@@ -1,9 +1,9 @@
 package service;
 
-import dataaccess.BadRequestException;
+import dataaccess.exceptions.BadRequestException;
 import dataaccess.DataAccessException;
 import dataaccess.MemoryUserDataAccess;
-import dataaccess.UsernameTakenException;
+import dataaccess.exceptions.UsernameTakenException;
 import model.UserData;
 import service.RequestAndResult.*;
 import java.util.UUID;
