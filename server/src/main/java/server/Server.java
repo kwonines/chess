@@ -3,8 +3,12 @@ package server;
 import com.google.gson.Gson;
 import dataaccess.exceptions.BadRequestException;
 import dataaccess.DataAccessException;
+import dataaccess.exceptions.IncorrectPasswordException;
+import dataaccess.exceptions.UserDoesNotExistException;
 import dataaccess.exceptions.UsernameTakenException;
 import service.ClearService;
+import service.RequestAndResult.LoginRequest;
+import service.RequestAndResult.LoginResult;
 import service.RequestAndResult.RegisterRequest;
 import service.RequestAndResult.RegisterResult;
 import service.UserService;
@@ -28,12 +32,29 @@ public class Server {
         // Register your endpoints and handle exceptions here.
         Spark.delete("/db", this::clear);
         Spark.post("/user", this::register);
+        Spark.post("/session", this::login);
 
         //This line initializes the server and can be removed once you have a functioning endpoint 
         Spark.init();
 
         Spark.awaitInitialization();
         return Spark.port();
+    }
+
+    private Object login(Request request, Response response) throws DataAccessException {
+        Gson gson = new Gson();
+        LoginRequest body = gson.fromJson(request.body(), LoginRequest.class);
+
+        try {
+            LoginResult result = userService.login(body);
+            return gson.toJson(result);
+        } catch (UserDoesNotExistException exception) {
+            response.status(500);
+            return gson.toJson(new ErrorMessage(exception.getMessage()));
+        } catch (IncorrectPasswordException exception) {
+            response.status(401);
+            return gson.toJson(new ErrorMessage(exception.getMessage()));
+        }
     }
 
     private Object clear(Request request, Response response) {
