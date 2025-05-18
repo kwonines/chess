@@ -3,8 +3,7 @@ package server;
 import com.google.gson.Gson;
 import dataaccess.exceptions.BadRequestException;
 import dataaccess.DataAccessException;
-import dataaccess.exceptions.IncorrectPasswordException;
-import dataaccess.exceptions.UserDoesNotExistException;
+import dataaccess.exceptions.UnauthorizedException;
 import dataaccess.exceptions.UsernameTakenException;
 import service.ClearService;
 import service.RequestAndResult.LoginRequest;
@@ -48,11 +47,11 @@ public class Server {
         try {
             LoginResult result = userService.login(body);
             return gson.toJson(result);
-        } catch (UserDoesNotExistException exception) {
-            response.status(500);
-            return gson.toJson(new ErrorMessage(exception.getMessage()));
-        } catch (IncorrectPasswordException exception) {
+        } catch (UnauthorizedException exception) {
             response.status(401);
+            return gson.toJson(new ErrorMessage(exception.getMessage()));
+        } catch (BadRequestException exception) {
+            response.status(400);
             return gson.toJson(new ErrorMessage(exception.getMessage()));
         }
     }

@@ -4,8 +4,7 @@ import dataaccess.MemoryAuthDataAccess;
 import dataaccess.exceptions.BadRequestException;
 import dataaccess.DataAccessException;
 import dataaccess.MemoryUserDataAccess;
-import dataaccess.exceptions.IncorrectPasswordException;
-import dataaccess.exceptions.UserDoesNotExistException;
+import dataaccess.exceptions.UnauthorizedException;
 import dataaccess.exceptions.UsernameTakenException;
 import model.AuthData;
 import model.UserData;
@@ -34,17 +33,15 @@ public class UserService {
 
     public LoginResult login(LoginRequest loginRequest) throws DataAccessException {
         UserData user = userDataAccess.findUser(loginRequest.username());
-        if (user == null) {
-            throw new UserDoesNotExistException("Error: Username does not exist");
-        } else {
-            if (Objects.equals(loginRequest.password(), user.password())) {
-                String authToken = UUID.randomUUID().toString();
-                return new LoginResult(loginRequest.username(), authToken);
-            } else {
-                throw new IncorrectPasswordException("Error: Incorrect password");
-            }
+        if (user == null || loginRequest.username() == null || loginRequest.password() == null) {
+            throw new BadRequestException("Error: bad request");
         }
-
+        if (loginRequest.password().equals(user.password())) {
+            String authToken = UUID.randomUUID().toString();
+            return new LoginResult(loginRequest.username(), authToken);
+        } else {
+            throw new UnauthorizedException("Error: Incorrect password");
+        }
     }
 
     public void logout(LogoutRequest logoutRequest) {
