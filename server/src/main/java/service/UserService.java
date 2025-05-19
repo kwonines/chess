@@ -45,6 +45,7 @@ public class UserService {
         }
         if (loginRequest.password().equals(user.password())) {
             String authToken = UUID.randomUUID().toString();
+            authDataAccess.addAuth(new AuthData(user.username(), authToken));
             return new LoginResult(loginRequest.username(), authToken);
         } else {
             throw new UnauthorizedException("Error: Incorrect password");
