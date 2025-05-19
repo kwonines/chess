@@ -12,8 +12,15 @@ import service.RequestAndResult.*;
 import java.util.UUID;
 
 public class UserService {
-    MemoryUserDataAccess userDataAccess = new MemoryUserDataAccess();
-    MemoryAuthDataAccess authDataAccess = new MemoryAuthDataAccess();
+
+
+    private final MemoryUserDataAccess userDataAccess;
+    private final MemoryAuthDataAccess authDataAccess;
+
+    public UserService(MemoryUserDataAccess userDataAccess, MemoryAuthDataAccess authDataAccess) {
+        this.userDataAccess = userDataAccess;
+        this.authDataAccess = authDataAccess;
+    }
 
     public RegisterResult register(RegisterRequest registerRequest) throws DataAccessException {
         if (registerRequest.username() == null || registerRequest.password() == null || registerRequest.email() == null) {
@@ -45,8 +52,12 @@ public class UserService {
         }
     }
 
-    public void logout(LogoutRequest logoutRequest) {
-
+    public void logout(LogoutRequest logoutRequest) throws DataAccessException {
+        AuthData authData = authDataAccess.findAuth(logoutRequest.authToken());
+        if (authData == null) {
+            throw new UnauthorizedException("Error: unauthorized");
+        }
+        authDataAccess.deleteAuth(authData.authToken());
     }
 }
 

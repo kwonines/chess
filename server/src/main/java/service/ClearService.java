@@ -5,9 +5,21 @@ import dataaccess.MemoryGameDataAccess;
 import dataaccess.MemoryUserDataAccess;
 
 public class ClearService {
+
+
+    private final MemoryUserDataAccess userDataAccess;
+    private final MemoryAuthDataAccess authDataAccess;
+    private final MemoryGameDataAccess gameDataAccess;
+
+    public ClearService(MemoryUserDataAccess userDataAccess, MemoryAuthDataAccess authDataAccess, MemoryGameDataAccess gameDataAccess) {
+        this.userDataAccess = userDataAccess;
+        this.authDataAccess = authDataAccess;
+        this.gameDataAccess = gameDataAccess;
+    }
+
     public void clearApplication() {
-        new MemoryAuthDataAccess().clear();
-        new MemoryGameDataAccess().clear();
-        new MemoryUserDataAccess().clear();
+        userDataAccess.clear();
+        authDataAccess.clear();
+        gameDataAccess.clear();
     }
 }

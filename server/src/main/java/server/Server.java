@@ -1,26 +1,32 @@
 package server;
 
 import com.google.gson.Gson;
+import dataaccess.MemoryAuthDataAccess;
+import dataaccess.MemoryGameDataAccess;
+import dataaccess.MemoryUserDataAccess;
 import dataaccess.exceptions.BadRequestException;
 import dataaccess.DataAccessException;
 import dataaccess.exceptions.UnauthorizedException;
 import dataaccess.exceptions.UsernameTakenException;
 import service.ClearService;
-import service.RequestAndResult.LoginRequest;
-import service.RequestAndResult.LoginResult;
-import service.RequestAndResult.RegisterRequest;
-import service.RequestAndResult.RegisterResult;
+import service.RequestAndResult.*;
 import service.UserService;
 import spark.*;
+
+import java.util.Iterator;
+import java.util.Set;
 
 public class Server {
 
     UserService userService;
     ClearService clearService;
+    MemoryUserDataAccess userDataAccess = new MemoryUserDataAccess();
+    MemoryAuthDataAccess authDataAccess = new MemoryAuthDataAccess();
+    MemoryGameDataAccess gameDataAccess = new MemoryGameDataAccess();
 
     public Server() {
-        userService = new UserService();
-        clearService = new ClearService();
+        userService = new UserService(userDataAccess, authDataAccess);
+        clearService = new ClearService(userDataAccess, authDataAccess, gameDataAccess);
     }
 
     public int run(int desiredPort) {
@@ -32,6 +38,7 @@ public class Server {
         Spark.delete("/db", this::clear);
         Spark.post("/user", this::register);
         Spark.post("/session", this::login);
+        Spark.delete("/session", this::logout);
 
         //This line initializes the server and can be removed once you have a functioning endpoint 
         Spark.init();
@@ -40,18 +47,16 @@ public class Server {
         return Spark.port();
     }
 
-    private Object login(Request request, Response response) throws DataAccessException {
+    private Object logout(Request request, Response response) throws DataAccessException {
         Gson gson = new Gson();
-        LoginRequest body = gson.fromJson(request.body(), LoginRequest.class);
+        String header = request.headers("Authorization");
 
+        LogoutRequest logoutRequest = new LogoutRequest(header);
         try {
-            LoginResult result = userService.login(body);
-            return gson.toJson(result);
+            userService.logout(logoutRequest);
+            return gson.toJson(null);
         } catch (UnauthorizedException exception) {
             response.status(401);
-            return gson.toJson(new ErrorMessage(exception.getMessage()));
-        } catch (BadRequestException exception) {
-            response.status(400);
             return gson.toJson(new ErrorMessage(exception.getMessage()));
         }
     }
@@ -70,6 +75,22 @@ public class Server {
             return gson.toJson(result);
         } catch (UsernameTakenException exception) {
             response.status(403);
+            return gson.toJson(new ErrorMessage(exception.getMessage()));
+        } catch (BadRequestException exception) {
+            response.status(400);
+            return gson.toJson(new ErrorMessage(exception.getMessage()));
+        }
+    }
+
+    private Object login(Request request, Response response) throws DataAccessException {
+        Gson gson = new Gson();
+        LoginRequest body = gson.fromJson(request.body(), LoginRequest.class);
+
+        try {
+            LoginResult result = userService.login(body);
+            return gson.toJson(result);
+        } catch (UnauthorizedException exception) {
+            response.status(401);
             return gson.toJson(new ErrorMessage(exception.getMessage()));
         } catch (BadRequestException exception) {
             response.status(400);
