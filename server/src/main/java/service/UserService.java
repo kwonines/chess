@@ -13,7 +13,6 @@ import java.util.UUID;
 
 public class UserService {
 
-
     private final MemoryUserDataAccess userDataAccess;
     private final MemoryAuthDataAccess authDataAccess;
 

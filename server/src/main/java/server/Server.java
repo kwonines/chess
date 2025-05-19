@@ -9,16 +9,15 @@ import dataaccess.DataAccessException;
 import dataaccess.exceptions.UnauthorizedException;
 import dataaccess.exceptions.UsernameTakenException;
 import service.ClearService;
+import service.GameService;
 import service.RequestAndResult.*;
 import service.UserService;
 import spark.*;
 
-import java.util.Iterator;
-import java.util.Set;
-
 public class Server {
 
     UserService userService;
+    GameService gameService;
     ClearService clearService;
     MemoryUserDataAccess userDataAccess = new MemoryUserDataAccess();
     MemoryAuthDataAccess authDataAccess = new MemoryAuthDataAccess();
@@ -27,6 +26,7 @@ public class Server {
     public Server() {
         userService = new UserService(userDataAccess, authDataAccess);
         clearService = new ClearService(userDataAccess, authDataAccess, gameDataAccess);
+        gameService = new GameService(authDataAccess, gameDataAccess);
     }
 
     public int run(int desiredPort) {
@@ -39,12 +39,27 @@ public class Server {
         Spark.post("/user", this::register);
         Spark.post("/session", this::login);
         Spark.delete("/session", this::logout);
+        Spark.get("/game", this::listGames);
 
         //This line initializes the server and can be removed once you have a functioning endpoint 
         Spark.init();
 
         Spark.awaitInitialization();
         return Spark.port();
+    }
+
+    private Object listGames(Request request, Response response) throws DataAccessException {
+        Gson gson = new Gson();
+        String authToken = request.headers("Authorization");
+        ListRequest listRequest = new ListRequest(authToken);
+
+        try {
+            ListResult listResult = gameService.listGames(listRequest);
+            return gson.toJson(listResult);
+        } catch (UnauthorizedException exception) {
+            response.status(401);
+            return gson.toJson(new ErrorMessage(exception.getMessage()));
+        }
     }
 
     private Object logout(Request request, Response response) throws DataAccessException {
