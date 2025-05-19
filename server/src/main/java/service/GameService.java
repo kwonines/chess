@@ -40,24 +40,29 @@ public class GameService {
 
     public void joinGame(JoinRequest joinRequest) throws DataAccessException {
         GameData oldGame = gameDataAccess.findGame(joinRequest.gameID());
+
         if (joinRequest.playerColor() == null || oldGame == null) {
             throw new BadRequestException("Error: bad request");
         }
         if (authDataAccess.findAuth(joinRequest.authToken()) == null) {
             throw new UnauthorizedException("Error: unauthorized");
         }
+
         String user = authDataAccess.findAuth(joinRequest.authToken()).username();
-        if (joinRequest.playerColor() == ChessGame.TeamColor.WHITE && gameDataAccess.findGame(joinRequest.gameID()).whiteUsername() != null) {
-            throw new ColorTakenException("Error: color is already taken");
-        }
+
         if (joinRequest.playerColor() == ChessGame.TeamColor.WHITE) {
-            gameDataAccess.updateGame(joinRequest.gameID(), new GameData(oldGame.gameID(), user, oldGame.blackUsername(), oldGame.gameName(), oldGame.game()));
-        }
-        if (joinRequest.playerColor() == ChessGame.TeamColor.BLACK && gameDataAccess.findGame(joinRequest.gameID()).blackUsername() != null) {
-            throw new ColorTakenException("Error: color is already taken");
+            if (gameDataAccess.findGame(joinRequest.gameID()).whiteUsername() != null) {
+                throw new ColorTakenException("Error: color is already taken");
+            }
+            gameDataAccess.updateGame(joinRequest.gameID(),
+                    new GameData(oldGame.gameID(), user, oldGame.blackUsername(), oldGame.gameName(), oldGame.game()));
         }
         if (joinRequest.playerColor() == ChessGame.TeamColor.BLACK) {
-            gameDataAccess.updateGame(joinRequest.gameID(), new GameData(oldGame.gameID(), oldGame.whiteUsername(), user, oldGame.gameName(), oldGame.game()));
+            if (gameDataAccess.findGame(joinRequest.gameID()).blackUsername() != null) {
+                throw new ColorTakenException("Error: color is already taken");
+            }
+            gameDataAccess.updateGame(joinRequest.gameID(),
+                    new GameData(oldGame.gameID(), oldGame.whiteUsername(), user, oldGame.gameName(), oldGame.game()));
         }
     }
 
