@@ -8,7 +8,7 @@ import dataaccess.exceptions.BadRequestException;
 import dataaccess.exceptions.ColorTakenException;
 import dataaccess.exceptions.UnauthorizedException;
 import model.GameData;
-import service.RequestAndResult.*;
+import service.requestandresult.*;
 
 public class GameService {
     private final MemoryAuthDataAccess authDataAccess;

@@ -8,9 +8,9 @@ import dataaccess.exceptions.UnauthorizedException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import service.RequestAndResult.LoginRequest;
-import service.RequestAndResult.LogoutRequest;
-import service.RequestAndResult.RegisterRequest;
+import service.requestandresult.LoginRequest;
+import service.requestandresult.LogoutRequest;
+import service.requestandresult.RegisterRequest;
 
 import java.util.UUID;
 

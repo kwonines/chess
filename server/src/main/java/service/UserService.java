@@ -8,7 +8,7 @@ import dataaccess.exceptions.UnauthorizedException;
 import dataaccess.exceptions.UsernameTakenException;
 import model.AuthData;
 import model.UserData;
-import service.RequestAndResult.*;
+import service.requestandresult.*;
 import java.util.UUID;
 
 public class UserService {

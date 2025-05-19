@@ -11,7 +11,7 @@ import dataaccess.exceptions.UnauthorizedException;
 import dataaccess.exceptions.UsernameTakenException;
 import service.ClearService;
 import service.GameService;
-import service.RequestAndResult.*;
+import service.requestandresult.*;
 import service.UserService;
 import spark.*;
 

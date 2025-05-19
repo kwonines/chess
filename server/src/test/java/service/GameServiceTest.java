@@ -12,9 +12,9 @@ import model.GameData;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import service.RequestAndResult.CreateRequest;
-import service.RequestAndResult.JoinRequest;
-import service.RequestAndResult.ListRequest;
+import service.requestandresult.CreateRequest;
+import service.requestandresult.JoinRequest;
+import service.requestandresult.ListRequest;
 
 class GameServiceTest {
 
