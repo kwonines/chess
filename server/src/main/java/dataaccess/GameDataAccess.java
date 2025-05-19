@@ -9,5 +9,5 @@ public interface GameDataAccess {
     void addGame(GameData gameData);
     GameData findGame(int gameID);
     ArrayList<GameData> listGames();
-    void updateGame(String playerColor, int gameID);
+    void updateGame(int gameID, GameData newGame);
 }

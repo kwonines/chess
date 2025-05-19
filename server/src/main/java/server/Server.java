@@ -6,6 +6,7 @@ import dataaccess.MemoryGameDataAccess;
 import dataaccess.MemoryUserDataAccess;
 import dataaccess.exceptions.BadRequestException;
 import dataaccess.DataAccessException;
+import dataaccess.exceptions.ColorTakenException;
 import dataaccess.exceptions.UnauthorizedException;
 import dataaccess.exceptions.UsernameTakenException;
 import service.ClearService;
@@ -40,12 +41,51 @@ public class Server {
         Spark.post("/session", this::login);
         Spark.delete("/session", this::logout);
         Spark.get("/game", this::listGames);
+        Spark.post("/game", this::createGame);
+        Spark.put("/game", this::joinGame);
 
         //This line initializes the server and can be removed once you have a functioning endpoint 
         Spark.init();
 
         Spark.awaitInitialization();
         return Spark.port();
+    }
+
+    private Object joinGame(Request request, Response response) throws DataAccessException {
+        Gson gson = new Gson();
+        String authToken = request.headers("Authorization");
+        JoinRequest joinRequest = gson.fromJson(request.body(), JoinRequest.class);
+
+        try {
+            gameService.joinGame(new JoinRequest(joinRequest.playerColor(), joinRequest.gameID(), authToken));
+            return gson.toJson(null);
+        } catch (UnauthorizedException exception) {
+            response.status(401);
+            return gson.toJson(new ErrorMessage(exception.getMessage()));
+        } catch (BadRequestException exception) {
+            response.status(400);
+            return gson.toJson(new ErrorMessage(exception.getMessage()));
+        } catch (ColorTakenException exception) {
+            response.status(403);
+            return gson.toJson(new ErrorMessage(exception.getMessage()));
+        }
+    }
+
+    private Object createGame(Request request, Response response) throws DataAccessException {
+        Gson gson = new Gson();
+        String authToken = request.headers("Authorization");
+        CreateRequest createRequest = gson.fromJson(request.body(), CreateRequest.class);
+
+        try {
+            CreateResult result = gameService.createGame(new CreateRequest(authToken, createRequest.gameName()));
+            return gson.toJson(result);
+        } catch (UnauthorizedException exception) {
+            response.status(401);
+            return gson.toJson(new ErrorMessage(exception.getMessage()));
+        } catch (BadRequestException exception) {
+            response.status(400);
+            return gson.toJson(new ErrorMessage(exception.getMessage()));
+        }
     }
 
     private Object listGames(Request request, Response response) throws DataAccessException {
