@@ -9,8 +9,6 @@ import dataaccess.exceptions.UsernameTakenException;
 import model.AuthData;
 import model.UserData;
 import service.RequestAndResult.*;
-
-import java.util.Objects;
 import java.util.UUID;
 
 public class UserService {
@@ -33,8 +31,11 @@ public class UserService {
 
     public LoginResult login(LoginRequest loginRequest) throws DataAccessException {
         UserData user = userDataAccess.findUser(loginRequest.username());
-        if (user == null || loginRequest.username() == null || loginRequest.password() == null) {
+        if (loginRequest.username() == null || loginRequest.password() == null) {
             throw new BadRequestException("Error: bad request");
+        }
+        if (user == null) {
+            throw new UnauthorizedException("Error: Username not found");
         }
         if (loginRequest.password().equals(user.password())) {
             String authToken = UUID.randomUUID().toString();
