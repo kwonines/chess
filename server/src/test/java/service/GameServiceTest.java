@@ -11,26 +11,32 @@ import model.AuthData;
 import model.GameData;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import service.requestandresult.CreateRequest;
 import service.requestandresult.JoinRequest;
 import service.requestandresult.ListRequest;
 
+import java.util.ArrayList;
+
 class GameServiceTest {
 
-    static MemoryGameDataAccess gameDataAccess = new MemoryGameDataAccess();
-    static MemoryAuthDataAccess authDataAccess = new MemoryAuthDataAccess();
+    static MemoryGameDataAccess gameDataAccess;
+    static MemoryAuthDataAccess authDataAccess;
     static GameService gameService;
 
     @BeforeEach
     void setUp() {
+        gameDataAccess = new MemoryGameDataAccess();
+        authDataAccess = new MemoryAuthDataAccess();
         gameService = new GameService(authDataAccess, gameDataAccess);
         authDataAccess.addAuth(new AuthData("username", "authToken"));
     }
 
     @Test
-    void listGamesSuccess() {
-        Assertions.assertDoesNotThrow(() -> gameService.listGames(new ListRequest("authToken")));
+    @Order(0)
+    void listGamesSuccess() throws DataAccessException {
+        Assertions.assertEquals(new ArrayList<>(), gameService.listGames(new ListRequest("authToken")).games());
     }
 
     @Test
