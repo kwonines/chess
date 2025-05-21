@@ -7,19 +7,13 @@ import dataaccess.exceptions.UsernameTakenException;
 import model.AuthData;
 import model.UserData;
 import service.requestandresult.*;
+
+import java.sql.SQLException;
 import java.util.UUID;
 
 public class UserService {
 
-//    private final UserDataAccess userDataAccess;
-//    private final AuthDataAccess authDataAccess;
-//
-//    public UserService(MemoryUserDataAccess userDataAccess, MemoryAuthDataAccess authDataAccess) {
-//        this.userDataAccess = userDataAccess;
-//        this.authDataAccess = authDataAccess;
-//    }
-
-    UserDataAccess userDataAccess = new MemoryUserDataAccess();
+    MemoryUserDataAccess userDataAccess = new MemoryUserDataAccess();
     AuthDataAccess authDataAccess = new MemoryAuthDataAccess();
 
     public RegisterResult register(RegisterRequest registerRequest) throws DataAccessException {

@@ -24,6 +24,45 @@ public class DatabaseManager {
         try (var conn = DriverManager.getConnection(connectionUrl, dbUsername, dbPassword);
              var preparedStatement = conn.prepareStatement(statement)) {
             preparedStatement.executeUpdate();
+
+            conn.setCatalog(databaseName);
+
+            var createUserTable = """
+                CREATE TABLE IF NOT EXISTS users (
+                username VARCHAR(255) NOT NULL,
+                password VARCHAR(255) NOT NULL,
+                email VARCHAR(255) NOT NULL
+                PRIMARY KEY (username)
+                )""";
+
+            try (var createTableStatement = conn.prepareStatement(createUserTable)) {
+                createTableStatement.execute();
+            }
+
+            var createGameTable = """
+                    CREATE TABLE IF NOT EXISTS games (
+                    gameID INT NOT NULL AUTO_INCREMENT,
+                    whiteUsername VARCHAR(255),
+                    blackUsername VARCHAR(255),
+                    gameName VARCHAR(255) NOT NULL,
+                    game longtext NOT NULL,
+                    PRIMARY KEY (gameID)
+                    )""";
+
+            try (var createTableStatement = conn.prepareStatement(createGameTable)) {
+                createTableStatement.execute();
+            }
+
+            var createAuthTable = """
+                    CREATE TABLE IF NOT EXISTS authTokens (
+                    authToken VARCHAR(255) NOT NULL,
+                    username VARCHAR(255) NOT NULL,
+                    PRIMARY KEY (authToken)
+                    )""";
+
+            try (var createTableStatement = conn.prepareStatement(createAuthTable)) {
+                createTableStatement.execute();
+            }
         } catch (SQLException ex) {
             throw new DataAccessException("failed to create database", ex);
         }
