@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class MemoryGameDataAccess implements GameDataAccess {
-    HashMap<Integer, GameData> games = new HashMap<>();
+    private static final HashMap<Integer, GameData> games = new HashMap<>();
 
     @Override
     public void addGame(GameData gameData) {

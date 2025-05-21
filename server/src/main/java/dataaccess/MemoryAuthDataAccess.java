@@ -5,7 +5,8 @@ import model.AuthData;
 import java.util.HashMap;
 
 public class MemoryAuthDataAccess  implements AuthDataAccess {
-    HashMap<String, AuthData> authorizations = new HashMap<>();
+    private static final HashMap<String, AuthData> authorizations = new HashMap<>();
+
     @Override
     public void addAuth(AuthData authData) {
         authorizations.put(authData.authToken(), authData);

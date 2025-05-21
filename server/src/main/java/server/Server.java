@@ -1,9 +1,6 @@
 package server;
 
 import com.google.gson.Gson;
-import dataaccess.MemoryAuthDataAccess;
-import dataaccess.MemoryGameDataAccess;
-import dataaccess.MemoryUserDataAccess;
 import dataaccess.exceptions.BadRequestException;
 import dataaccess.DataAccessException;
 import dataaccess.exceptions.ColorTakenException;
@@ -20,14 +17,11 @@ public class Server {
     UserService userService;
     GameService gameService;
     ClearService clearService;
-    MemoryUserDataAccess userDataAccess = new MemoryUserDataAccess();
-    MemoryAuthDataAccess authDataAccess = new MemoryAuthDataAccess();
-    MemoryGameDataAccess gameDataAccess = new MemoryGameDataAccess();
 
     public Server() {
-        userService = new UserService(userDataAccess, authDataAccess);
-        clearService = new ClearService(userDataAccess, authDataAccess, gameDataAccess);
-        gameService = new GameService(authDataAccess, gameDataAccess);
+        userService = new UserService();
+        clearService = new ClearService();
+        gameService = new GameService();
     }
 
     public int run(int desiredPort) {

@@ -22,7 +22,7 @@ class ClearServiceTest {
         authDataAccess.addAuth(new AuthData("username", "exampleToken"));
         gameDataAccess.addGame(new GameData(1, null, null, "name", new ChessGame()));
 
-        ClearService clearService = new ClearService(userDataAccess, authDataAccess, gameDataAccess);
+        ClearService clearService = new ClearService();
         clearService.clearApplication();
 
         assertNull(userDataAccess.findUser("a"));

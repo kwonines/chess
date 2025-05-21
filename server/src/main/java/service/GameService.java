@@ -1,9 +1,7 @@
 package service;
 
 import chess.ChessGame;
-import dataaccess.DataAccessException;
-import dataaccess.MemoryAuthDataAccess;
-import dataaccess.MemoryGameDataAccess;
+import dataaccess.*;
 import dataaccess.exceptions.BadRequestException;
 import dataaccess.exceptions.ColorTakenException;
 import dataaccess.exceptions.UnauthorizedException;
@@ -11,13 +9,8 @@ import model.GameData;
 import service.requestandresult.*;
 
 public class GameService {
-    private final MemoryAuthDataAccess authDataAccess;
-    private final MemoryGameDataAccess gameDataAccess;
-
-    public GameService(MemoryAuthDataAccess authDataAccess, MemoryGameDataAccess gameDataAccess) {
-        this.authDataAccess = authDataAccess;
-        this.gameDataAccess = gameDataAccess;
-    }
+    private final AuthDataAccess authDataAccess = new MemoryAuthDataAccess();
+    private final GameDataAccess gameDataAccess = new MemoryGameDataAccess();
 
     public ListResult listGames(ListRequest listRequest) throws DataAccessException {
         if (authDataAccess.findAuth(listRequest.authToken()) == null) {

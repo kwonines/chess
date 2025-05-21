@@ -29,7 +29,9 @@ class GameServiceTest {
     void setUp() {
         gameDataAccess = new MemoryGameDataAccess();
         authDataAccess = new MemoryAuthDataAccess();
-        gameService = new GameService(authDataAccess, gameDataAccess);
+        gameService = new GameService();
+        gameDataAccess.clear();
+        authDataAccess.clear();
         authDataAccess.addAuth(new AuthData("username", "authToken"));
     }
 

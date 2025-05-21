@@ -1,9 +1,7 @@
 package service;
 
-import dataaccess.MemoryAuthDataAccess;
+import dataaccess.*;
 import dataaccess.exceptions.BadRequestException;
-import dataaccess.DataAccessException;
-import dataaccess.MemoryUserDataAccess;
 import dataaccess.exceptions.UnauthorizedException;
 import dataaccess.exceptions.UsernameTakenException;
 import model.AuthData;
@@ -13,13 +11,16 @@ import java.util.UUID;
 
 public class UserService {
 
-    private final MemoryUserDataAccess userDataAccess;
-    private final MemoryAuthDataAccess authDataAccess;
+//    private final UserDataAccess userDataAccess;
+//    private final AuthDataAccess authDataAccess;
+//
+//    public UserService(MemoryUserDataAccess userDataAccess, MemoryAuthDataAccess authDataAccess) {
+//        this.userDataAccess = userDataAccess;
+//        this.authDataAccess = authDataAccess;
+//    }
 
-    public UserService(MemoryUserDataAccess userDataAccess, MemoryAuthDataAccess authDataAccess) {
-        this.userDataAccess = userDataAccess;
-        this.authDataAccess = authDataAccess;
-    }
+    UserDataAccess userDataAccess = new MemoryUserDataAccess();
+    AuthDataAccess authDataAccess = new MemoryAuthDataAccess();
 
     public RegisterResult register(RegisterRequest registerRequest) throws DataAccessException {
         if (registerRequest.username() == null || registerRequest.password() == null || registerRequest.email() == null) {

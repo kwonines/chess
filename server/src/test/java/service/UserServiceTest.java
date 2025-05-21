@@ -1,7 +1,6 @@
 package service;
 
 import dataaccess.DataAccessException;
-import dataaccess.MemoryAuthDataAccess;
 import dataaccess.MemoryUserDataAccess;
 import dataaccess.exceptions.BadRequestException;
 import dataaccess.exceptions.UnauthorizedException;
@@ -17,12 +16,12 @@ import java.util.UUID;
 class UserServiceTest {
 
     static UserService userService;
+    MemoryUserDataAccess userDataAccess = new MemoryUserDataAccess();
 
     @BeforeEach
     void setUp() {
-        MemoryAuthDataAccess authDataAccess = new MemoryAuthDataAccess();
-        MemoryUserDataAccess userDataAccess = new MemoryUserDataAccess();
-        userService = new UserService(userDataAccess, authDataAccess);
+        userService = new UserService();
+        userDataAccess.clear();
     }
 
     @Test
