@@ -25,7 +25,11 @@ class ClearServiceTest {
         ClearService clearService = new ClearService();
         clearService.clearApplication();
 
-        assertNull(userDataAccess.findUser("a"));
+        try {
+            assertNull(userDataAccess.findUser("a"));
+        } catch (dataaccess.DataAccessException e) {
+            throw new RuntimeException(e);
+        }
         assertNull(authDataAccess.findAuth("username"));
         assertNull(gameDataAccess.findGame(1));
     }

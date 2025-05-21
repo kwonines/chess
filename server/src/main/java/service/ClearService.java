@@ -3,7 +3,7 @@ package service;
 import dataaccess.*;
 public class ClearService {
 
-    private final MemoryUserDataAccess userDataAccess = new MemoryUserDataAccess();
+    private final UserDataAccess userDataAccess = new SQLUserDataAccess();
     private final AuthDataAccess authDataAccess = new MemoryAuthDataAccess();
     private final GameDataAccess gameDataAccess = new MemoryGameDataAccess();
 

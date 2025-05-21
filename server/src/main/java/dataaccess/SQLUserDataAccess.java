@@ -7,18 +7,16 @@ import java.sql.SQLException;
 
 public class SQLUserDataAccess implements UserDataAccess {
 
-    public SQLUserDataAccess() throws DataAccessException {
-        DatabaseManager.createDatabase();
-    }
-
     @Override
-    public void clear() throws DataAccessException {
+    public void clear() {
         try (Connection connection = DatabaseManager.getConnection()) {
-            try (var clearStatement = connection.prepareStatement("DELETE FROM games")) {
+            try (var clearStatement = connection.prepareStatement("DELETE FROM users")) {
                 clearStatement.executeUpdate();
             }
         } catch (SQLException exception) {
             System.out.println("Error: something went wrong (SQLException)");
+        } catch (DataAccessException exception) {
+            System.out.println("Error: something went wrong (DataAccessException");
         }
     }
 

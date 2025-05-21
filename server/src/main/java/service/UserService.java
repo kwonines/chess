@@ -8,12 +8,11 @@ import model.AuthData;
 import model.UserData;
 import service.requestandresult.*;
 
-import java.sql.SQLException;
 import java.util.UUID;
 
 public class UserService {
 
-    MemoryUserDataAccess userDataAccess = new MemoryUserDataAccess();
+    UserDataAccess userDataAccess = new SQLUserDataAccess();
     AuthDataAccess authDataAccess = new MemoryAuthDataAccess();
 
     public RegisterResult register(RegisterRequest registerRequest) throws DataAccessException {

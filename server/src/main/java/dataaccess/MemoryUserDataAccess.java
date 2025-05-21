@@ -8,7 +8,7 @@ public class MemoryUserDataAccess implements UserDataAccess {
     private static final HashMap<String, UserData> users = new HashMap<>();
 
     @Override
-    public UserData findUser(String username) {
+    public UserData findUser(String username) throws DataAccessException {
         return users.get(username);
     }
 
