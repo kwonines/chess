@@ -10,8 +10,8 @@ public class SQLUserDataAccess implements UserDataAccess {
     @Override
     public void clear() {
         try (Connection connection = DatabaseManager.getConnection()) {
-            try (var clearStatement = connection.prepareStatement("DELETE FROM users")) {
-                clearStatement.executeUpdate();
+            try (var statement = connection.prepareStatement("DELETE FROM users")) {
+                statement.executeUpdate();
             }
         } catch (SQLException exception) {
             System.out.println("Error: something went wrong (SQLException)");
@@ -23,9 +23,9 @@ public class SQLUserDataAccess implements UserDataAccess {
     @Override
     public UserData findUser(String username) throws DataAccessException {
         try (var connection = DatabaseManager.getConnection()) {
-            try (var searchStatement = connection.prepareStatement("SELECT username, password, email FROM users WHERE username =?")) {
-                searchStatement.setString(1, username);
-                try (var result = searchStatement.executeQuery()) {
+            try (var statement = connection.prepareStatement("SELECT username, password, email FROM users WHERE username =?")) {
+                statement.setString(1, username);
+                try (var result = statement.executeQuery()) {
                     if (result.next()) {
                         return new UserData(result.getString("username"),
                                 result.getString("password"), result.getString("email"));
@@ -43,12 +43,12 @@ public class SQLUserDataAccess implements UserDataAccess {
     @Override
     public void addUser(UserData userData) throws DataAccessException {
         try (var connection = DatabaseManager.getConnection()) {
-            try (var addStatement = connection.prepareStatement("INSERT INTO users (username, password, email) VALUES (?, ?, ?)")) {
-                addStatement.setString(1, userData.username());
-                addStatement.setString(2, userData.password());
-                addStatement.setString(3, userData.email());
+            try (var statement = connection.prepareStatement("INSERT INTO users (username, password, email) VALUES (?, ?, ?)")) {
+                statement.setString(1, userData.username());
+                statement.setString(2, userData.password());
+                statement.setString(3, userData.email());
 
-                addStatement.executeUpdate();
+                statement.executeUpdate();
             }
         } catch (SQLException e) {
             System.out.println("Error: something went wrong (SQLException)");

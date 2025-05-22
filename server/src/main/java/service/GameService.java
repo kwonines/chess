@@ -10,7 +10,7 @@ import service.requestandresult.*;
 
 public class GameService {
     private final AuthDataAccess authDataAccess = new MemoryAuthDataAccess();
-    private final GameDataAccess gameDataAccess = new MemoryGameDataAccess();
+    private final GameDataAccess gameDataAccess = new SQLGameDataAccess();
 
     public ListResult listGames(ListRequest listRequest) throws DataAccessException {
         if (authDataAccess.findAuth(listRequest.authToken()) == null) {
