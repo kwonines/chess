@@ -26,9 +26,12 @@ public class SQLUserDataAccess implements UserDataAccess {
             try (var searchStatement = connection.prepareStatement("SELECT username, password, email FROM users WHERE username =?")) {
                 searchStatement.setString(1, username);
                 try (var result = searchStatement.executeQuery()) {
-                    result.next();
-                    return new UserData(result.getString("username"),
-                            result.getString("password"), result.getString("email"));
+                    if (result.next()) {
+                        return new UserData(result.getString("username"),
+                                result.getString("password"), result.getString("email"));
+                    } else {
+                        return null;
+                    }
                 }
             }
         } catch (SQLException e) {
