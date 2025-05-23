@@ -6,6 +6,7 @@ import dataaccess.exceptions.UnauthorizedException;
 import dataaccess.exceptions.UsernameTakenException;
 import model.AuthData;
 import model.UserData;
+import org.mindrot.jbcrypt.BCrypt;
 import service.requestandresult.*;
 
 import java.util.UUID;
@@ -37,7 +38,7 @@ public class UserService {
         if (user == null) {
             throw new UnauthorizedException("Error: Username not found");
         }
-        if (loginRequest.password().equals(user.password())) {
+        if (BCrypt.checkpw(loginRequest.password(), user.password())) {
             String authToken = UUID.randomUUID().toString();
             authDataAccess.addAuth(new AuthData(user.username(), authToken));
             return new LoginResult(loginRequest.username(), authToken);
