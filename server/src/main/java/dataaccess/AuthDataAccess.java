@@ -1,10 +1,11 @@
 package dataaccess;
 
+import dataaccess.exceptions.ServerErrorException;
 import model.AuthData;
 
 public interface AuthDataAccess {
-    void clear();
-    void addAuth(AuthData authData);
-    AuthData findAuth(String authToken);
-    void deleteAuth(String authToken);
+    void clear() throws ServerErrorException;
+    void addAuth(AuthData authData) throws DataAccessException;
+    AuthData findAuth(String authToken) throws ServerErrorException;
+    void deleteAuth(String authToken) throws ServerErrorException;
 }

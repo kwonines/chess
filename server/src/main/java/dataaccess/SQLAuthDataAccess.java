@@ -1,5 +1,6 @@
 package dataaccess;
 
+import dataaccess.exceptions.ServerErrorException;
 import model.AuthData;
 
 import java.sql.Connection;
@@ -7,20 +8,18 @@ import java.sql.SQLException;
 
 public class SQLAuthDataAccess implements AuthDataAccess {
     @Override
-    public void clear() {
+    public void clear() throws ServerErrorException {
         try (Connection connection = DatabaseManager.getConnection()) {
             try (var statement = connection.prepareStatement("DELETE FROM authorizations")) {
                 statement.executeUpdate();
             }
-        } catch (SQLException exception) {
-            System.out.println("Error: something went wrong (SQLException in clear)");
-        } catch (DataAccessException exception) {
-            System.out.println("Error: something went wrong (DataAccessException in clear)");
+        } catch (SQLException | DataAccessException exception) {
+            throw new ServerErrorException("Internal server error");
         }
     }
 
     @Override
-    public void addAuth(AuthData authData) {
+    public void addAuth(AuthData authData) throws DataAccessException {
         try (Connection connection = DatabaseManager.getConnection()) {
             try (var statement = connection.prepareStatement("INSERT INTO authorizations (authToken, username) VALUES (?,?)")) {
                 statement.setString(1, authData.authToken());
@@ -28,16 +27,14 @@ public class SQLAuthDataAccess implements AuthDataAccess {
 
                 statement.executeUpdate();
             }
-        } catch (SQLException e) {
-            System.out.println("Something went wrong (SQLException in addAuth)");
-        } catch (DataAccessException e) {
-            System.out.println("Something went wrong (DataAccessException in addAuth)");
+        } catch (SQLException | DataAccessException e) {
+            throw new ServerErrorException("Internal server error");
         }
 
     }
 
     @Override
-    public AuthData findAuth(String authToken) {
+    public AuthData findAuth(String authToken) throws ServerErrorException {
         try (Connection connection = DatabaseManager.getConnection()) {
             try (var statement = connection.prepareStatement("SELECT authToken, username FROM authorizations WHERE authToken =?")) {
                 statement.setString(1, authToken);
@@ -48,26 +45,20 @@ public class SQLAuthDataAccess implements AuthDataAccess {
                     else return null;
                 }
             }
-        } catch (SQLException e) {
-            System.out.println("Something went wrong (SQLException in findAuth)");
-            return null;
-        } catch (DataAccessException e) {
-            System.out.println("Something went wrong (DataAccessException in findAuth)");
-            return null;
+        } catch (SQLException | DataAccessException e) {
+            throw new ServerErrorException("Internal server error");
         }
     }
 
     @Override
-    public void deleteAuth(String authToken) {
+    public void deleteAuth(String authToken) throws ServerErrorException {
         try (Connection connection = DatabaseManager.getConnection()) {
             try (var statement = connection.prepareStatement("DELETE FROM authorizations WHERE authToken =?")) {
                 statement.setString(1, authToken);
                 statement.executeUpdate();
             }
-        } catch (SQLException exception) {
-            System.out.println("Error: something went wrong (SQLException in clear)");
-        } catch (DataAccessException exception) {
-            System.out.println("Error: something went wrong (DataAccessException in clear)");
+        } catch (SQLException | DataAccessException exception) {
+            throw new ServerErrorException("Internal server error");
         }
     }
 }

@@ -2,11 +2,8 @@ package server;
 
 import com.google.gson.Gson;
 import dataaccess.DatabaseManager;
-import dataaccess.exceptions.BadRequestException;
+import dataaccess.exceptions.*;
 import dataaccess.DataAccessException;
-import dataaccess.exceptions.ColorTakenException;
-import dataaccess.exceptions.UnauthorizedException;
-import dataaccess.exceptions.UsernameTakenException;
 import service.ClearService;
 import service.GameService;
 import service.requestandresult.*;
@@ -52,8 +49,13 @@ public class Server {
     }
 
     private Object clear(Request request, Response response) {
-        clearService.clearApplication();
-        return new Gson().toJson(null);
+        try {
+            clearService.clearApplication();
+            return new Gson().toJson(null);
+        } catch (ServerErrorException exception) {
+            response.status(500);
+            return new Gson().toJson(new ErrorMessage(exception.getMessage()));
+        }
     }
 
     private Object register(Request request, Response response) throws DataAccessException {
@@ -68,6 +70,9 @@ public class Server {
             return gson.toJson(new ErrorMessage(exception.getMessage()));
         } catch (BadRequestException exception) {
             response.status(400);
+            return gson.toJson(new ErrorMessage(exception.getMessage()));
+        } catch (ServerErrorException exception) {
+            response.status(500);
             return gson.toJson(new ErrorMessage(exception.getMessage()));
         }
     }
@@ -85,6 +90,9 @@ public class Server {
         } catch (BadRequestException exception) {
             response.status(400);
             return gson.toJson(new ErrorMessage(exception.getMessage()));
+        } catch (ServerErrorException exception) {
+            response.status(500);
+            return gson.toJson(new ErrorMessage(exception.getMessage()));
         }
     }
 
@@ -99,6 +107,9 @@ public class Server {
         } catch (UnauthorizedException exception) {
             response.status(401);
             return gson.toJson(new ErrorMessage(exception.getMessage()));
+        } catch (ServerErrorException exception) {
+            response.status(500);
+            return gson.toJson(new ErrorMessage(exception.getMessage()));
         }
     }
 
@@ -112,6 +123,9 @@ public class Server {
             return gson.toJson(listResult);
         } catch (UnauthorizedException exception) {
             response.status(401);
+            return gson.toJson(new ErrorMessage(exception.getMessage()));
+        } catch (ServerErrorException exception) {
+            response.status(500);
             return gson.toJson(new ErrorMessage(exception.getMessage()));
         }
     }
@@ -129,6 +143,9 @@ public class Server {
             return gson.toJson(new ErrorMessage(exception.getMessage()));
         } catch (BadRequestException exception) {
             response.status(400);
+            return gson.toJson(new ErrorMessage(exception.getMessage()));
+        } catch (ServerErrorException exception) {
+            response.status(500);
             return gson.toJson(new ErrorMessage(exception.getMessage()));
         }
     }
@@ -149,6 +166,9 @@ public class Server {
             return gson.toJson(new ErrorMessage(exception.getMessage()));
         } catch (ColorTakenException exception) {
             response.status(403);
+            return gson.toJson(new ErrorMessage(exception.getMessage()));
+        } catch (ServerErrorException exception) {
+            response.status(500);
             return gson.toJson(new ErrorMessage(exception.getMessage()));
         }
     }

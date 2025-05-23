@@ -4,6 +4,7 @@ import chess.ChessGame;
 import dataaccess.MemoryAuthDataAccess;
 import dataaccess.MemoryGameDataAccess;
 import dataaccess.MemoryUserDataAccess;
+import dataaccess.exceptions.ServerErrorException;
 import model.AuthData;
 import model.GameData;
 import model.UserData;
@@ -13,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class ClearServiceTest {
 
     @Test
-    void clearApplication() {
+    void clearApplication() throws ServerErrorException {
         MemoryUserDataAccess userDataAccess = new MemoryUserDataAccess();
         MemoryAuthDataAccess authDataAccess = new MemoryAuthDataAccess();
         MemoryGameDataAccess gameDataAccess = new MemoryGameDataAccess();
