@@ -18,13 +18,14 @@ class SQLAuthDataAccessTest {
         dataAccess = new SQLAuthDataAccess();
     }
 
-    @AfterEach
+    @BeforeEach
     void reset() throws ServerErrorException {
         dataAccess.clear();
     }
 
     @AfterAll
-    static void takeDown() {
+    static void takeDown() throws ServerErrorException {
+        dataAccess.clear();
         server.stop();
     }
 
