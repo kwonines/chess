@@ -5,20 +5,20 @@ import model.UserData;
 import java.util.HashMap;
 
 public class MemoryUserDataAccess implements UserDataAccess {
-    private static final HashMap<String, UserData> users = new HashMap<>();
+    private static final HashMap<String, UserData> USERS = new HashMap<>();
 
     @Override
-    public UserData findUser(String username) throws DataAccessException {
-        return users.get(username);
+    public UserData findUser(String username) {
+        return USERS.get(username);
     }
 
     @Override
     public void addUser(UserData userData) {
-        users.put(userData.username(), userData);
+        USERS.put(userData.username(), userData);
     }
 
     @Override
     public void clear() {
-        users.clear();
+        USERS.clear();
     }
 }

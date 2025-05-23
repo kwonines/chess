@@ -53,7 +53,9 @@ public class SQLGameDataAccess implements GameDataAccess {
                         ChessGame game = new Gson().fromJson(result.getString("game"), ChessGame.class);
                         return new GameData(gameID, whiteUsername, blackUsername, gameName, game);
                     }
-                    else return null;
+                    else {
+                        return null;
+                    }
                 }
             }
         } catch (SQLException | DataAccessException e) {

@@ -6,30 +6,30 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class MemoryGameDataAccess implements GameDataAccess {
-    private static final HashMap<Integer, GameData> games = new HashMap<>();
+    private static final HashMap<Integer, GameData> GAMES = new HashMap<>();
 
     @Override
     public void addGame(GameData gameData) {
-        games.put(gameData.gameID(), gameData);
+        GAMES.put(gameData.gameID(), gameData);
     }
 
     @Override
     public GameData findGame(int gameID) {
-        return games.get(gameID);
+        return GAMES.get(gameID);
     }
 
     @Override
     public ArrayList<GameData> listGames() {
-        return new ArrayList<>(games.values());
+        return new ArrayList<>(GAMES.values());
     }
 
     @Override
     public void updateGame(int gameID, GameData newGame) {
-        games.replace(gameID, newGame);
+        GAMES.replace(gameID, newGame);
     }
 
     @Override
     public void clear() {
-        games.clear();
+        GAMES.clear();
     }
 }
