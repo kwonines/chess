@@ -1,8 +1,10 @@
 package service;
 
 import dataaccess.DataAccessException;
-import dataaccess.MemoryUserDataAccess;
+import dataaccess.SQLUserDataAccess;
+import dataaccess.UserDataAccess;
 import dataaccess.exceptions.BadRequestException;
+import dataaccess.exceptions.ServerErrorException;
 import dataaccess.exceptions.UnauthorizedException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -16,10 +18,10 @@ import java.util.UUID;
 class UserServiceTest {
 
     static UserService userService;
-    MemoryUserDataAccess userDataAccess = new MemoryUserDataAccess();
+    UserDataAccess userDataAccess = new SQLUserDataAccess();
 
     @BeforeEach
-    void setUp() {
+    void setUp() throws ServerErrorException {
         userService = new UserService();
         userDataAccess.clear();
     }

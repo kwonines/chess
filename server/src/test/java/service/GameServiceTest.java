@@ -1,9 +1,7 @@
 package service;
 
 import chess.ChessGame;
-import dataaccess.DataAccessException;
-import dataaccess.MemoryAuthDataAccess;
-import dataaccess.MemoryGameDataAccess;
+import dataaccess.*;
 import dataaccess.exceptions.BadRequestException;
 import dataaccess.exceptions.ColorTakenException;
 import dataaccess.exceptions.UnauthorizedException;
@@ -21,14 +19,14 @@ import java.util.ArrayList;
 
 class GameServiceTest {
 
-    static MemoryGameDataAccess gameDataAccess;
-    static MemoryAuthDataAccess authDataAccess;
+    static GameDataAccess gameDataAccess;
+    static AuthDataAccess authDataAccess;
     static GameService gameService;
 
     @BeforeEach
-    void setUp() {
-        gameDataAccess = new MemoryGameDataAccess();
-        authDataAccess = new MemoryAuthDataAccess();
+    void setUp() throws DataAccessException {
+        gameDataAccess = new SQLGameDataAccess();
+        authDataAccess = new SQLAuthDataAccess();
         gameService = new GameService();
         gameDataAccess.clear();
         authDataAccess.clear();
