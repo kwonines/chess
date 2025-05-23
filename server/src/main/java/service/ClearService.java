@@ -4,7 +4,7 @@ import dataaccess.*;
 public class ClearService {
 
     private final UserDataAccess userDataAccess = new SQLUserDataAccess();
-    private final AuthDataAccess authDataAccess = new MemoryAuthDataAccess();
+    private final AuthDataAccess authDataAccess = new SQLAuthDataAccess();
     private final GameDataAccess gameDataAccess = new SQLGameDataAccess();
 
     public void clearApplication() {

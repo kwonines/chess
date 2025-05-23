@@ -12,8 +12,8 @@ public class SQLGameDataAccess implements GameDataAccess {
     @Override
     public void clear() {
         try (Connection connection = DatabaseManager.getConnection()) {
-            try (var clearStatement = connection.prepareStatement("DELETE FROM games")) {
-                clearStatement.executeUpdate();
+            try (var statement = connection.prepareStatement("DELETE FROM games")) {
+                statement.executeUpdate();
             }
         } catch (SQLException exception) {
             System.out.println("Error: something went wrong (SQLException)");

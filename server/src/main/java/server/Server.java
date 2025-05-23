@@ -1,6 +1,7 @@
 package server;
 
 import com.google.gson.Gson;
+import dataaccess.DatabaseManager;
 import dataaccess.exceptions.BadRequestException;
 import dataaccess.DataAccessException;
 import dataaccess.exceptions.ColorTakenException;
@@ -22,6 +23,11 @@ public class Server {
         userService = new UserService();
         clearService = new ClearService();
         gameService = new GameService();
+        try {
+            DatabaseManager.createDatabase();
+        } catch (DataAccessException exception) {
+            throw new RuntimeException("Error creating database");
+        }
     }
 
     public int run(int desiredPort) {

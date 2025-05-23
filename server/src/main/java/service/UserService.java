@@ -13,7 +13,7 @@ import java.util.UUID;
 public class UserService {
 
     UserDataAccess userDataAccess = new SQLUserDataAccess();
-    AuthDataAccess authDataAccess = new MemoryAuthDataAccess();
+    AuthDataAccess authDataAccess = new SQLAuthDataAccess();
 
     public RegisterResult register(RegisterRequest registerRequest) throws DataAccessException {
         if (registerRequest.username() == null || registerRequest.password() == null || registerRequest.email() == null) {

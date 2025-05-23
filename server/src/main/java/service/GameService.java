@@ -9,7 +9,7 @@ import model.GameData;
 import service.requestandresult.*;
 
 public class GameService {
-    private final AuthDataAccess authDataAccess = new MemoryAuthDataAccess();
+    private final AuthDataAccess authDataAccess = new SQLAuthDataAccess();
     private final GameDataAccess gameDataAccess = new SQLGameDataAccess();
 
     public ListResult listGames(ListRequest listRequest) throws DataAccessException {
