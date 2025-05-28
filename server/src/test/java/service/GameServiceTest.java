@@ -11,9 +11,9 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
-import service.requestandresult.CreateRequest;
-import service.requestandresult.JoinRequest;
-import service.requestandresult.ListRequest;
+import model.requestandresult.CreateRequest;
+import model.requestandresult.JoinRequest;
+import model.requestandresult.ListRequest;
 
 import java.util.ArrayList;
 

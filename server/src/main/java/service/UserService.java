@@ -7,8 +7,8 @@ import dataaccess.exceptions.UnauthorizedException;
 import dataaccess.exceptions.UsernameTakenException;
 import model.AuthData;
 import model.UserData;
+import model.requestandresult.*;
 import org.mindrot.jbcrypt.BCrypt;
-import service.requestandresult.*;
 
 import java.util.UUID;
 

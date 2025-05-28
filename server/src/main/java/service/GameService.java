@@ -7,7 +7,7 @@ import dataaccess.exceptions.ColorTakenException;
 import dataaccess.exceptions.ServerErrorException;
 import dataaccess.exceptions.UnauthorizedException;
 import model.GameData;
-import service.requestandresult.*;
+import model.requestandresult.*;
 
 public class GameService {
     private final AuthDataAccess authDataAccess = new SQLAuthDataAccess();

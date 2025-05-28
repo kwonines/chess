@@ -1,4 +1,4 @@
-package service.requestandresult;
+package model.requestandresult;
 
 import chess.ChessGame;
 

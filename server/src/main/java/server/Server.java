@@ -4,9 +4,9 @@ import com.google.gson.Gson;
 import dataaccess.DatabaseManager;
 import dataaccess.exceptions.*;
 import dataaccess.DataAccessException;
+import model.requestandresult.*;
 import service.ClearService;
 import service.GameService;
-import service.requestandresult.*;
 import service.UserService;
 import spark.*;
 

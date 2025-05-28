@@ -3,7 +3,9 @@ import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
+        ServerFacade server = new ServerFacade();
         Scanner scanner = new Scanner(System.in);
+        String authToken;
 
         System.out.println("Welcome to Chess! Enter a command to begin:\n   register\n   login\n   quit");
 
@@ -12,7 +14,16 @@ public class Main {
         while (!Objects.equals(input, "quit")) {
             switch (input) {
                 case "register":
-                    System.out.println("register hasn't been implemented");
+                    System.out.println("Enter a username to register:");
+                    String username = scanner.nextLine();
+                    System.out.println("Enter a password:");
+                    String password = scanner.nextLine();
+                    System.out.println("Enter an email address:");
+                    String email = scanner.nextLine();
+                    var result = server.register(username, password, email);
+                    authToken = result.authToken();
+                    System.out.println("Register Success! You are now logged in as " + result.username());
+                    startLoggedInLoop();
                     break;
                 case "login":
                     System.out.println("login hasn't been implemented");
