@@ -5,13 +5,14 @@ public class Main {
     public static void main(String[] args) {
         ServerFacade server = new ServerFacade();
         Scanner scanner = new Scanner(System.in);
-        String authToken;
+
 
         System.out.print("Welcome to Chess! Enter a command to begin:\n   register\n   login\n   quit\n>");
 
         String input = scanner.nextLine();
 
         while (!Objects.equals(input, "quit")) {
+            String authToken;
             switch (input) {
                 case "register":
                     System.out.println("Enter a username to register:");
@@ -24,7 +25,7 @@ public class Main {
                         var result = server.register(regUsername, regPassword, email);
                         authToken = result.authToken();
                         System.out.println("Register Success! You are now logged in as " + result.username());
-                        startLoggedInLoop();
+                        startLoggedInLoop(server, authToken);
                     } catch (ResponseException exception) {
                         System.out.println(exception.getMessage());
                     }
@@ -38,7 +39,7 @@ public class Main {
                         var result = server.login(logUsername, logPassword);
                         authToken = result.authToken();
                         System.out.println("Logged in as " + result.username());
-                        startLoggedInLoop();
+                        startLoggedInLoop(server, authToken);
                     } catch (ResponseException exception) {
                         System.out.println(exception.getMessage());
                     }
@@ -54,7 +55,7 @@ public class Main {
         }
     }
 
-    private static void startLoggedInLoop() {
+    private static void startLoggedInLoop(ServerFacade server, String authToken) {
         Scanner scanner = new Scanner(System.in);
         String input = scanner.nextLine();
         boolean loop = true;
@@ -71,9 +72,15 @@ public class Main {
                                observe""");
                     break;
                 case "logout":
-                    System.out.println("logout is not implemented, exiting loop");
-                    loop = false;
-                    continue;
+                    try {
+                        server.logout(authToken);
+                        System.out.println("Logged out");
+                        loop = false;
+                        continue;
+                    } catch (ResponseException exception) {
+                        System.out.println(exception.getMessage());
+                    }
+                    break;
                 case "create":
                     System.out.println("creating a game not yet implemented");
                     break;

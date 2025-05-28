@@ -18,6 +18,11 @@ public class ServerFacade {
         return makeRequest("POST", "/session", request, LoginResult.class);
     }
 
+    public void logout(String authToken) throws ResponseException {
+        LogoutRequest request = new LogoutRequest(authToken);
+        makeRequest("DELETE", "/session", request, null, authToken);
+    }
+
     private <T> T makeRequest(String method, String path, Object request, Class<T> responseTypes) {
         return makeRequest(method, path, request, responseTypes, null);
     }
@@ -31,14 +36,11 @@ public class ServerFacade {
 
             if (request != null) {
                 connection.addRequestProperty("Content-Type", "application/json");
+                connection.addRequestProperty("authorization", authToken);
                 String body = new Gson().toJson(request);
                 try (OutputStream writeBody = connection.getOutputStream()) {
                     writeBody.write(body.getBytes());
                 }
-            }
-
-            if (authToken != null) {
-                connection.addRequestProperty("authorization", authToken);
             }
 
             connection.connect();
