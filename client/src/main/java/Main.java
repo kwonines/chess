@@ -1,5 +1,6 @@
 import model.GameData;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Objects;
 import java.util.Scanner;
@@ -86,11 +87,11 @@ public class Main {
                     break;
                 case "list":
                     try {
-                        var result = server.listGames(authToken);
-                        if (result.games().isEmpty()) {
+                        ArrayList<GameData> result = server.listGames(authToken).games();
+                        if (result.isEmpty()) {
                             System.out.println("No games to show");
                         }
-                        for (Iterator<GameData> it = result.games().iterator(); it.hasNext(); it.next()) {
+                        for (Iterator<GameData> it = result.iterator(); it.hasNext(); it.next()) {
                             System.out.println(it);
                         }
                     } catch (ResponseException exception) {

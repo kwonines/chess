@@ -4,6 +4,7 @@ import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Objects;
 
 public class ServerFacade {
 
@@ -24,7 +25,7 @@ public class ServerFacade {
     }
 
     public ListResult listGames(String authToken) throws ResponseException {
-        ListRequest request = new ListRequest(authToken);
+        CreateRequest request = new CreateRequest(authToken, null);
         return makeRequest("GET", "/game", request, ListResult.class, authToken);
     }
 
@@ -42,10 +43,12 @@ public class ServerFacade {
 
             if (request != null) {
                 connection.addRequestProperty("Content-Type", "application/json");
-                connection.addRequestProperty("authorization", authToken);
-                String body = new Gson().toJson(request);
-                try (OutputStream writeBody = connection.getOutputStream()) {
-                    writeBody.write(body.getBytes());
+                connection.addRequestProperty("Authorization", authToken);
+                if (!Objects.equals(method, "GET")) {
+                    String body = new Gson().toJson(request);
+                    try (OutputStream writeBody = connection.getOutputStream()) {
+                        writeBody.write(body.getBytes());
+                    }
                 }
             }
 
