@@ -23,6 +23,29 @@ public class ChessPiece {
     }
 
     @Override
+    public String toString() {
+        if (this.pieceColor == ChessGame.TeamColor.WHITE) {
+            return switch (this.type) {
+                case KING -> "♔";
+                case QUEEN -> "♕";
+                case BISHOP -> "♗";
+                case KNIGHT -> "♘";
+                case ROOK -> "♖";
+                case PAWN -> "♙";
+            };
+        } else {
+            return switch (this.type) {
+                case KING -> "♚";
+                case QUEEN -> "♛";
+                case BISHOP -> "♝";
+                case KNIGHT -> "♞";
+                case ROOK -> "♜";
+                case PAWN -> "♟";
+            };
+        }
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) {
             return false;
