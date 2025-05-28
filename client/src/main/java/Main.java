@@ -7,7 +7,7 @@ public class Main {
         Scanner scanner = new Scanner(System.in);
         String authToken;
 
-        System.out.println("Welcome to Chess! Enter a command to begin:\n   register\n   login\n   quit");
+        System.out.print("Welcome to Chess! Enter a command to begin:\n   register\n   login\n   quit\n>");
 
         String input = scanner.nextLine();
 
@@ -15,19 +15,33 @@ public class Main {
             switch (input) {
                 case "register":
                     System.out.println("Enter a username to register:");
-                    String username = scanner.nextLine();
+                    String regUsername = scanner.nextLine();
                     System.out.println("Enter a password:");
-                    String password = scanner.nextLine();
+                    String regPassword = scanner.nextLine();
                     System.out.println("Enter an email address:");
                     String email = scanner.nextLine();
-                    var result = server.register(username, password, email);
-                    authToken = result.authToken();
-                    System.out.println("Register Success! You are now logged in as " + result.username());
-                    startLoggedInLoop();
+                    try {
+                        var result = server.register(regUsername, regPassword, email);
+                        authToken = result.authToken();
+                        System.out.println("Register Success! You are now logged in as " + result.username());
+                        startLoggedInLoop();
+                    } catch (ResponseException exception) {
+                        System.out.println(exception.getMessage());
+                    }
                     break;
                 case "login":
-                    System.out.println("login hasn't been implemented");
-                    startLoggedInLoop();
+                    System.out.println("Enter username:");
+                    String logUsername = scanner.nextLine();
+                    System.out.println("Enter password:");
+                    String logPassword = scanner.nextLine();
+                    try {
+                        var result = server.login(logUsername, logPassword);
+                        authToken = result.authToken();
+                        System.out.println("Logged in as " + result.username());
+                        startLoggedInLoop();
+                    } catch (ResponseException exception) {
+                        System.out.println(exception.getMessage());
+                    }
                     break;
                 case "help":
                     System.out.println("Type any of the following commands to use them:\n   register\n   login\n   quit");
@@ -35,7 +49,7 @@ public class Main {
                 default:
                     System.out.println("Unknown command, please try again (or type \"help\" for list of available commands)");
             }
-            System.out.println("Enter a command:");
+            System.out.print("Enter a command:\n>");
             input = scanner.nextLine();
         }
     }

@@ -1,8 +1,5 @@
-import chess.ChessPosition;
 import com.google.gson.Gson;
-import model.requestandresult.RegisterRequest;
-import model.requestandresult.RegisterResult;
-
+import model.requestandresult.*;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URI;
@@ -10,17 +7,22 @@ import java.net.URISyntaxException;
 
 public class ServerFacade {
 
-    public RegisterResult register(String username, String password, String email) {
+    public RegisterResult register(String username, String password, String email) throws ResponseException {
         RegisterRequest request = new RegisterRequest(username, password, email);
         return makeRequest("POST", "/user", request, RegisterResult.class);
 
+    }
+
+    public LoginResult login(String username, String password) throws ResponseException {
+        LoginRequest request = new LoginRequest(username, password);
+        return makeRequest("POST", "/session", request, LoginResult.class);
     }
 
     private <T> T makeRequest(String method, String path, Object request, Class<T> responseTypes) {
         return makeRequest(method, path, request, responseTypes, null);
     }
 
-    private <T> T makeRequest(String method, String path, Object request, Class<T> responseType, String authToken) {
+    private <T> T makeRequest(String method, String path, Object request, Class<T> responseType, String authToken) throws ResponseException {
         try {
             HttpURLConnection connection = (HttpURLConnection) new URI("http://localhost:8080" + path).toURL().openConnection();
             connection.setRequestMethod(method);
@@ -51,8 +53,11 @@ public class ServerFacade {
                     return null;
                 }
             } else {
-                System.out.println("you did it wrong");
-                return null;
+                try (InputStream errorResponse = connection.getErrorStream()) {
+                    InputStreamReader errorReader = new InputStreamReader(errorResponse);
+                    ErrorMessage message = new Gson().fromJson(errorReader, ErrorMessage.class);
+                    throw new ResponseException(message.message());
+                }
             }
 
         } catch (IOException | URISyntaxException exception) {
