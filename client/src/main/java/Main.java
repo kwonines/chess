@@ -1,3 +1,6 @@
+import model.GameData;
+
+import java.util.Iterator;
 import java.util.Objects;
 import java.util.Scanner;
 
@@ -24,7 +27,7 @@ public class Main {
                     try {
                         var result = server.register(regUsername, regPassword, email);
                         authToken = result.authToken();
-                        System.out.println("Register Success! You are now logged in as " + result.username());
+                        System.out.print("Register Success! You are now logged in as " + result.username() + "\n>");
                         startLoggedInLoop(server, authToken);
                     } catch (ResponseException exception) {
                         System.out.println(exception.getMessage());
@@ -38,7 +41,7 @@ public class Main {
                     try {
                         var result = server.login(logUsername, logPassword);
                         authToken = result.authToken();
-                        System.out.println("Logged in as " + result.username());
+                        System.out.print("Logged in as " + result.username() + "\n>");
                         startLoggedInLoop(server, authToken);
                     } catch (ResponseException exception) {
                         System.out.println(exception.getMessage());
@@ -81,11 +84,28 @@ public class Main {
                         System.out.println(exception.getMessage());
                     }
                     break;
-                case "create":
-                    System.out.println("creating a game not yet implemented");
-                    break;
                 case "list":
-                    System.out.println("listing games not yet implemented");
+                    try {
+                        var result = server.listGames(authToken);
+                        if (result.games().isEmpty()) {
+                            System.out.println("No games to show");
+                        }
+                        for (Iterator<GameData> it = result.games().iterator(); it.hasNext(); it.next()) {
+                            System.out.println(it);
+                        }
+                    } catch (ResponseException exception) {
+                        System.out.println(exception.getMessage());
+                    }
+                    break;
+                case "create":
+                    System.out.println("Please enter a name for your game:");
+                    String gameName = scanner.nextLine();
+                    try {
+                        server.createGame(authToken, gameName);
+                        System.out.println("Game created");
+                    } catch (ResponseException exception) {
+                        System.out.println(exception.getMessage());
+                    }
                     break;
                 case "join":
                     System.out.println("joining a game not yet implemented");
@@ -97,6 +117,7 @@ public class Main {
                     System.out.println("Unknown command please try again (or type \"help\" for list of available commands)");
                     break;
             }
+            System.out.print(">");
             input = scanner.nextLine();
         }
     }

@@ -9,13 +9,13 @@ public class ServerFacade {
 
     public RegisterResult register(String username, String password, String email) throws ResponseException {
         RegisterRequest request = new RegisterRequest(username, password, email);
-        return makeRequest("POST", "/user", request, RegisterResult.class);
+        return makeRequest("POST", "/user", request, RegisterResult.class, null);
 
     }
 
     public LoginResult login(String username, String password) throws ResponseException {
         LoginRequest request = new LoginRequest(username, password);
-        return makeRequest("POST", "/session", request, LoginResult.class);
+        return makeRequest("POST", "/session", request, LoginResult.class, null);
     }
 
     public void logout(String authToken) throws ResponseException {
@@ -23,8 +23,14 @@ public class ServerFacade {
         makeRequest("DELETE", "/session", request, null, authToken);
     }
 
-    private <T> T makeRequest(String method, String path, Object request, Class<T> responseTypes) {
-        return makeRequest(method, path, request, responseTypes, null);
+    public ListResult listGames(String authToken) throws ResponseException {
+        ListRequest request = new ListRequest(authToken);
+        return makeRequest("GET", "/game", request, ListResult.class, authToken);
+    }
+
+    public void createGame(String authToken, String gameName) throws ResponseException {
+        CreateRequest request = new CreateRequest(authToken, gameName);
+        makeRequest("POST", "/game", request, null, authToken);
     }
 
     private <T> T makeRequest(String method, String path, Object request, Class<T> responseType, String authToken) throws ResponseException {
