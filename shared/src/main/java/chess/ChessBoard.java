@@ -18,6 +18,11 @@ public class ChessBoard {
     }
 
     @Override
+    public String toString() {
+        return "ChessBoard{}";
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) {
             return false;

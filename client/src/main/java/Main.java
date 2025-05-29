@@ -1,3 +1,4 @@
+import chess.ChessGame;
 import model.GameData;
 
 import java.util.*;
@@ -86,6 +87,7 @@ public class Main {
                 case "list":
                     try {
                         ArrayList<GameData> result = server.listGames(authToken).games();
+                        games.clear();
                         if (result.isEmpty()) {
                             System.out.println("No games to show");
                         } else {
@@ -112,7 +114,44 @@ public class Main {
                     }
                     break;
                 case "join":
-                    System.out.println("joining a game not yet implemented");
+                    try {
+                        ArrayList<GameData> result = server.listGames(authToken).games();
+                        games.clear();
+                        if (result.isEmpty()) {
+                            System.out.println("There are no games available to join");
+                        } else {
+                            for (int i = 0; i < result.size(); i++) {
+                                games.put(i + 1, result.get(i));
+                            }
+                            System.out.println("Enter the number for the game you would like to join (e.g. 2)");
+                            int gameNumber;
+                            try {
+                                gameNumber = scanner.nextInt();
+                            } catch (InputMismatchException exception) {
+                                System.out.println("Incorrect input type. Please try joining again");
+                                break;
+                            } finally {
+                                scanner.nextLine();
+                            }
+                            if (games.get(gameNumber) == null) {
+                                System.out.println("Game does not exist, please try joining again");
+                                break;
+                            }
+                            System.out.println("Enter (w)hite to join as white, or (b)lack to join as black");
+                            String stringColor = scanner.nextLine();
+                            if (Objects.equals(stringColor, "w") || Objects.equals(stringColor, "white")) {
+                                server.joinGame(ChessGame.TeamColor.WHITE, games.get(gameNumber).gameID(), authToken);
+                                System.out.println("Successfully joined game " + gameNumber + " as white player");
+                            } else if (Objects.equals(stringColor, "b") || Objects.equals(stringColor, "black")) {
+                                server.joinGame(ChessGame.TeamColor.BLACK, games.get(gameNumber).gameID(), authToken);
+                                System.out.println("Successfully joined game " + gameNumber + " as black player");
+                            } else {
+                                System.out.println("Error: incorrect color input. Please try again");
+                            }
+                        }
+                    } catch (ResponseException exception) {
+                        System.out.println(exception.getMessage());
+                    }
                     break;
                 case "observe":
                     System.out.println("observing a game is not yet implemented");
