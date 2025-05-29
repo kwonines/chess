@@ -1,9 +1,6 @@
 import model.GameData;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.Objects;
-import java.util.Scanner;
+import java.util.*;
 
 public class Main {
     public static void main(String[] args) {
@@ -62,6 +59,7 @@ public class Main {
     private static void startLoggedInLoop(ServerFacade server, String authToken) {
         Scanner scanner = new Scanner(System.in);
         String input = scanner.nextLine();
+        HashMap<Integer, GameData> games = new HashMap<>();
         boolean loop = true;
         while (loop) {
             switch (input) {
@@ -90,9 +88,14 @@ public class Main {
                         ArrayList<GameData> result = server.listGames(authToken).games();
                         if (result.isEmpty()) {
                             System.out.println("No games to show");
-                        }
-                        for (Iterator<GameData> it = result.iterator(); it.hasNext(); it.next()) {
-                            System.out.println(it);
+                        } else {
+                            for (int i = 0; i < result.size(); i++) {
+                                System.out.println((i + 1) + ":");
+                                System.out.println("   Game Name: " + result.get(i).gameName());
+                                System.out.println("   White Player: " + result.get(i).whiteUsername());
+                                System.out.println("   Black Player: " + result.get(i).blackUsername());
+                                games.put(i + 1, result.get(i));
+                            }
                         }
                     } catch (ResponseException exception) {
                         System.out.println(exception.getMessage());

@@ -1,3 +1,4 @@
+import chess.ChessGame;
 import com.google.gson.Gson;
 import model.requestandresult.*;
 import java.io.*;
@@ -32,6 +33,11 @@ public class ServerFacade {
     public void createGame(String authToken, String gameName) throws ResponseException {
         CreateRequest request = new CreateRequest(authToken, gameName);
         makeRequest("POST", "/game", request, null, authToken);
+    }
+
+    public void joinGame(ChessGame.TeamColor color, int gameID, String authToken) {
+        JoinRequest request = new JoinRequest(color, gameID, authToken);
+        makeRequest("PUT", "/game", request, null, authToken);
     }
 
     private <T> T makeRequest(String method, String path, Object request, Class<T> responseType, String authToken) throws ResponseException {
