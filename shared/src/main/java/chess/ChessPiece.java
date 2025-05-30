@@ -26,21 +26,21 @@ public class ChessPiece {
     public String toString() {
         if (this.pieceColor == ChessGame.TeamColor.WHITE) {
             return switch (this.type) {
-                case KING -> "♔";
-                case QUEEN -> "♕";
-                case BISHOP -> "♗";
-                case KNIGHT -> "♘";
-                case ROOK -> "♖";
-                case PAWN -> "♙";
+                case KING -> " ♔ ";
+                case QUEEN -> " ♕ ";
+                case BISHOP -> " ♗ ";
+                case KNIGHT -> " ♘ ";
+                case ROOK -> " ♖ ";
+                case PAWN -> " ♙ ";
             };
         } else {
             return switch (this.type) {
-                case KING -> "♚";
-                case QUEEN -> "♛";
-                case BISHOP -> "♝";
-                case KNIGHT -> "♞";
-                case ROOK -> "♜";
-                case PAWN -> "♟";
+                case KING -> " ♚ ";
+                case QUEEN -> " ♛ ";
+                case BISHOP -> " ♝ ";
+                case KNIGHT -> " ♞ ";
+                case ROOK -> " ♜ ";
+                case PAWN -> " ♟ ";
             };
         }
     }
