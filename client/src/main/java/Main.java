@@ -1,6 +1,9 @@
+import chess.ChessBoard;
 import chess.ChessGame;
+import chess.ChessPiece;
+import chess.ChessPosition;
 import model.GameData;
-
+import static ui.EscapeSequences.*;
 import java.util.*;
 
 public class Main {
@@ -142,9 +145,11 @@ public class Main {
                             if (Objects.equals(stringColor, "w") || Objects.equals(stringColor, "white")) {
                                 server.joinGame(ChessGame.TeamColor.WHITE, games.get(gameNumber).gameID(), authToken);
                                 System.out.println("Successfully joined game " + gameNumber + " as white player");
+                                drawBoard(games.get(gameNumber).game().getBoard(), ChessGame.TeamColor.WHITE);
                             } else if (Objects.equals(stringColor, "b") || Objects.equals(stringColor, "black")) {
                                 server.joinGame(ChessGame.TeamColor.BLACK, games.get(gameNumber).gameID(), authToken);
                                 System.out.println("Successfully joined game " + gameNumber + " as black player");
+                                drawBoard(games.get(gameNumber).game().getBoard(), ChessGame.TeamColor.BLACK);
                             } else {
                                 System.out.println("Error: incorrect color input. Please try again");
                             }
@@ -154,14 +159,116 @@ public class Main {
                     }
                     break;
                 case "observe":
-                    System.out.println("observing a game is not yet implemented");
+                    try {
+                        ArrayList<GameData> result = server.listGames(authToken).games();
+                        games.clear();
+                        if (result.isEmpty()) {
+                            System.out.println("There are no games available to observe");
+                        } else {
+                            for (int i = 0; i < result.size(); i++) {
+                                games.put(i + 1, result.get(i));
+                            }
+                            System.out.println("Enter the number for the game you would like to observe (e.g. 2)");
+                            int gameNumber;
+                            try {
+                                gameNumber = scanner.nextInt();
+                            } catch (InputMismatchException exception) {
+                                System.out.println("Incorrect input type, must be a number (e.g. 5) Please try to observe again");
+                                break;
+                            } finally {
+                                scanner.nextLine();
+                            }
+                            if (games.get(gameNumber) == null) {
+                                System.out.println("Game does not exist, please try to observe again");
+                                break;
+                            }
+                                drawBoard(games.get(gameNumber).game().getBoard(), ChessGame.TeamColor.WHITE);
+                        }
+                    } catch (ResponseException exception) {
+                        System.out.println(exception.getMessage());
+                    }
                     break;
                 default:
                     System.out.println("Unknown command please try again (or type \"help\" for list of available commands)");
                     break;
             }
+            System.out.println("Enter a command:");
             System.out.print(">");
             input = scanner.nextLine();
+        }
+    }
+
+    private static void drawBoard(ChessBoard board, ChessGame.TeamColor color) {
+        char[] columns = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'};
+        if (color == ChessGame.TeamColor.WHITE) {
+            System.out.print(EMPTY);
+            for (int i = 0; i < 8; i++) {
+                System.out.print(FRONT_SPACER + columns[i] + END_SPACER);
+            }
+            System.out.println();
+            for (int row = 1; row < 9; row++) {
+                System.out.print(" " + (9 - row) + " ");
+                for (int col = 1; col < 9; col++) {
+                    printSquare(board, row, col);
+                }
+                System.out.print(RESET_BG_COLOR + " " + (9 - row) + " ");
+                System.out.println();
+            }
+            System.out.print(EMPTY);
+            for (int i = 0; i < 8; i++) {
+                System.out.print(FRONT_SPACER + columns[i] + END_SPACER);
+            }
+            System.out.println();
+        } else {
+            System.out.print(EMPTY);
+            for (int i = 7; i >= 0; i--) {
+                System.out.print(FRONT_SPACER + columns[i] + END_SPACER);
+            }
+            System.out.println();
+            for (int row = 8; row > 0; row--) {
+                System.out.print(" " + (9 - row) + " ");
+                for (int col = 8; col > 0; col--) {
+                    printSquare(board, row, col);
+                }
+                System.out.print(RESET_BG_COLOR + " " + (9 - row) + " ");
+                System.out.println();
+            }
+            System.out.print(EMPTY);
+            for (int i = 7; i >= 0; i--) {
+                System.out.print(FRONT_SPACER + columns[i] + END_SPACER);
+            }
+            System.out.println();
+        }
+    }
+
+    private static void printSquare(ChessBoard board, int row, int col) {
+        if (row % 2 == 1 && col % 2 == 1) {
+            System.out.print(SET_BG_COLOR_LIGHT_GREY);
+        } else if (row % 2 == 1) {
+            System.out.print(SET_BG_COLOR_DARK_GREY);
+        } else if (col % 2 == 1) {
+            System.out.print(SET_BG_COLOR_DARK_GREY);
+        } else {
+            System.out.print(SET_BG_COLOR_LIGHT_GREY);
+        }
+        ChessPiece piece = board.getPiece(new ChessPosition(row, col));
+        if (piece == null) {
+            System.out.print(EMPTY);
+        } else if (piece.getTeamColor() == ChessGame.TeamColor.WHITE){
+            printPiece(piece, WHITE_BISHOP, WHITE_KING, WHITE_KNIGHT, WHITE_PAWN, WHITE_QUEEN, WHITE_ROOK);
+        } else {
+            printPiece(piece, BLACK_BISHOP, BLACK_KING, BLACK_KNIGHT, BLACK_PAWN, BLACK_QUEEN, BLACK_ROOK);
+        }
+    }
+
+    private static void printPiece(ChessPiece piece, String bishop, String king, String knight, String pawn, String queen, String rook) {
+        switch (piece.getPieceType()) {
+            case BISHOP -> System.out.print(bishop);
+            case KING -> System.out.print(king);
+            case KNIGHT -> System.out.print(knight);
+            case PAWN -> System.out.print(pawn);
+            case QUEEN -> System.out.print(queen);
+            case ROOK -> System.out.print(rook);
         }
     }
 }
