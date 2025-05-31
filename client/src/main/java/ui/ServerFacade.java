@@ -1,3 +1,5 @@
+package ui;
+
 import chess.ChessGame;
 import com.google.gson.Gson;
 import model.requestandresult.*;
@@ -8,6 +10,16 @@ import java.net.URISyntaxException;
 import java.util.Objects;
 
 public class ServerFacade {
+
+    String url;
+
+    public ServerFacade(int port) {
+        this.url = "http://localhost:" + port;
+    }
+
+    public ServerFacade() {
+        url = "http://localhost:8080";
+    }
 
     public RegisterResult register(String username, String password, String email) throws ResponseException {
         RegisterRequest request = new RegisterRequest(username, password, email);
@@ -42,7 +54,7 @@ public class ServerFacade {
 
     private <T> T makeRequest(String method, String path, Object request, Class<T> responseType, String authToken) throws ResponseException {
         try {
-            HttpURLConnection connection = (HttpURLConnection) new URI("http://localhost:8080" + path).toURL().openConnection();
+            HttpURLConnection connection = (HttpURLConnection) new URI(url + path).toURL().openConnection();
             connection.setRequestMethod(method);
             connection.setDoOutput(true);
 

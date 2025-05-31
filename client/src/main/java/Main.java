@@ -1,4 +1,6 @@
 import model.GameData;
+import ui.Client;
+
 import java.util.*;
 
 public class Main {
