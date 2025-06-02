@@ -68,8 +68,16 @@ public class Client {
                 for (int i = 0; i < result.size(); i++) {
                     System.out.println((i + 1) + ":");
                     System.out.println("   Game Name: " + result.get(i).gameName());
-                    System.out.println("   White Player: " + result.get(i).whiteUsername());
-                    System.out.println("   Black Player: " + result.get(i).blackUsername());
+                    if (result.get(i).whiteUsername() == null) {
+                        System.out.println("   White Player: none");
+                    } else {
+                        System.out.println("   White Player: " + result.get(i).whiteUsername());
+                    }
+                    if (result.get(i).blackUsername() == null) {
+                        System.out.println("   Black Player: none");
+                    } else {
+                        System.out.println("   Black Player: " + result.get(i).blackUsername());
+                    }
                     games.put(i + 1, result.get(i));
                 }
             }
