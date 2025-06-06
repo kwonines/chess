@@ -1,6 +1,8 @@
 package server.websocket;
 
+import chess.ChessGame;
 import com.google.gson.Gson;
+import websocket.messages.LoadGameMessage;
 import websocket.messages.Notification;
 
 import java.io.IOException;
@@ -13,8 +15,19 @@ public class ConnectionManager {
     public void notify(int gameID, String rootUser, Notification notification) throws IOException {
         for (var connection : connections.values()) {
             if (connection.session().isOpen()) {
-                if (!Objects.equals(connection.username(), rootUser)) {
+                if (!Objects.equals(connection.username(), rootUser) && connection.gameID() == gameID) {
                     String json = new Gson().toJson(notification);
+                    connection.session().getRemote().sendString(json);
+                }
+            }
+        }
+    }
+
+    public void sendBoard(int gameID, ChessGame game) throws IOException {
+        for (var connection : connections.values()) {
+            if (connection.session().isOpen()) {
+                if (connection.gameID() == gameID) {
+                    String json = new Gson().toJson(new LoadGameMessage(game));
                     connection.session().getRemote().sendString(json);
                 }
             }

@@ -36,8 +36,12 @@ public class WebSocketHandler {
             } else {
                 String username = auth.username();
                 switch (command.getCommandType()) {
-                    case CONNECT -> connect(session, username, command);
-                    case MAKE_MOVE -> makeMove(session, username, (MakeMoveCommand) command);
+                    case CONNECT:
+                        connect(session, username, command); break;
+                    case MAKE_MOVE:
+                        command = gson.fromJson(message, MakeMoveCommand.class);
+                        makeMove(session, username, (MakeMoveCommand) command);
+                        break;
                 }
             }
         } catch (ServerErrorException | IOException exception) {
@@ -46,7 +50,6 @@ public class WebSocketHandler {
     }
 
     private void connect(Session session, String username, UserGameCommand command) throws IOException, ServerErrorException {
-        connections.add(username, new ConnectionData(username, command.getGameID(), session));
         GameData gameData = gameDataAccess.findGame(command.getGameID());
         if (gameData == null) {
             session.getRemote().sendString(gson.toJson(new WSErrorMessage("Error: game does not exist")));
@@ -54,7 +57,6 @@ public class WebSocketHandler {
         }
 
         Notification notification;
-
         if (gameData.whiteUsername().equals(username)) {
             notification = new Notification(username + " has joined the game as white");
         } else if (gameData.blackUsername().equals(username)) {
@@ -63,19 +65,26 @@ public class WebSocketHandler {
             notification = new Notification(username + " is observing the game");
         }
 
+        connections.add(username, new ConnectionData(username, command.getGameID(), session));
         connections.notify(command.getGameID(), username, notification);
         ChessGame game = gameDataAccess.findGame(command.getGameID()).game();
         session.getRemote().sendString(gson.toJson(new LoadGameMessage(game)));
     }
 
-    private void makeMove(Session session, String username, MakeMoveCommand command) {
+    private void makeMove(Session session, String username, MakeMoveCommand command) throws IOException, ServerErrorException {
         try {
-            ChessGame game = gameDataAccess.findGame(command.getGameID()).game();
+            GameData gameData = gameDataAccess.findGame(command.getGameID());
+            if (!(username.equals(gameData.whiteUsername()) && !(username.equals(gameData.blackUsername())))) {
+                session.getRemote().sendString(gson.toJson(new WSErrorMessage("Error: cannot make moves as an observer")));
+                return;
+            }
+            ChessGame game = gameData.game();
             game.makeMove(command.getMove());
-        } catch (ServerErrorException e) {
-            throw new RuntimeException(e);
+            //TODO: update game in database here
+            connections.notify(command.getGameID(), username, new Notification(username + " made move: " + command.getMove().toString()));
+            connections.sendBoard(command.getGameID(), game);
         } catch (InvalidMoveException e) {
-
+            session.getRemote().sendString(gson.toJson(new WSErrorMessage("Error: invalid move")));
         }
     }
 }
