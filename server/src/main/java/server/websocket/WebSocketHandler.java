@@ -4,20 +4,15 @@ package server.websocket;
 import chess.ChessGame;
 import chess.InvalidMoveException;
 import com.google.gson.Gson;
-import dataaccess.AuthDataAccess;
-import dataaccess.GameDataAccess;
-import dataaccess.SQLAuthDataAccess;
-import dataaccess.SQLGameDataAccess;
 import dataaccess.exceptions.ServerErrorException;
+import model.AuthData;
+import model.GameData;
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
-import websocket.commands.JoinCommand;
-import websocket.commands.MakeMoveCommand;
-import websocket.commands.UserGameCommand;
-import websocket.messages.LoadGameMessage;
-import websocket.messages.Notification;
-import websocket.messages.ServerMessage;
+import websocket.commands.*;
+import websocket.messages.*;
+import dataaccess.*;
 
 import java.io.IOException;
 
@@ -35,13 +30,16 @@ public class WebSocketHandler {
         UserGameCommand command = gson.fromJson(message, UserGameCommand.class);
 
         try {
-            String username = dataAccess.findAuth(command.getAuthToken()).username();
-
-            switch (command.getCommandType()) {
-                case CONNECT -> connect(session, username, /*(JoinCommand)*/ command);
-                case MAKE_MOVE -> makeMove(session, username, (MakeMoveCommand) command);
+            AuthData auth = dataAccess.findAuth(command.getAuthToken());
+            if (auth == null) {
+                session.getRemote().sendString(gson.toJson(new ErrorMessage("Error: unauthorized")));
+            } else {
+                String username = auth.username();
+                switch (command.getCommandType()) {
+                    case CONNECT -> connect(session, username, command);
+                    case MAKE_MOVE -> makeMove(session, username, (MakeMoveCommand) command);
+                }
             }
-
         } catch (ServerErrorException | IOException exception) {
             throw new RuntimeException(exception.getMessage());
         }
@@ -49,8 +47,18 @@ public class WebSocketHandler {
 
     private void connect(Session session, String username, UserGameCommand command) throws IOException, ServerErrorException {
         connections.add(username, new ConnectionData(username, command.getGameID(), session));
-        Notification notification = new Notification(username + " has joined the game as "/* + command.connectType()*/);
-        connections.notifyOthersInGame(command.getGameID(), username, notification);
+        GameData gameData = gameDataAccess.findGame(command.getGameID());
+        Notification notification;
+
+        if (gameData.whiteUsername().equals(username)) {
+            notification = new Notification(username + " has joined the game as white");
+        } else if (gameData.blackUsername().equals(username)) {
+            notification = new Notification(username + " has joined the game as black");
+        } else {
+            notification = new Notification(username + " is observing the game");
+        }
+
+        connections.notify(command.getGameID(), username, notification);
         ChessGame game = gameDataAccess.findGame(command.getGameID()).game();
         session.getRemote().sendString(gson.toJson(new LoadGameMessage(game)));
     }

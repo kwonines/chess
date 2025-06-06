@@ -10,7 +10,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class ConnectionManager {
     private static final ConcurrentHashMap<String, ConnectionData> connections = new ConcurrentHashMap<>();
 
-    public void notifyOthersInGame(int gameID, String rootUser, Notification notification) throws IOException {
+    public void notify(int gameID, String rootUser, Notification notification) throws IOException {
         for (var connection : connections.values()) {
             if (connection.session().isOpen()) {
                 if (!Objects.equals(connection.username(), rootUser)) {
