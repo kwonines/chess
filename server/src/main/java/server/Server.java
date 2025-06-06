@@ -16,11 +16,13 @@ public class Server {
     UserService userService;
     GameService gameService;
     ClearService clearService;
+    WebSocketHandler webSocketHandler;
 
     public Server() {
         userService = new UserService();
         clearService = new ClearService();
         gameService = new GameService();
+        webSocketHandler = new WebSocketHandler();
         try {
             DatabaseManager.createDatabase();
         } catch (DataAccessException exception) {
@@ -33,7 +35,8 @@ public class Server {
 
         Spark.staticFiles.location("web");
 
-        Spark.webSocket("/ws", WebSocketHandler.class);
+        Spark.webSocket("/ws", webSocketHandler);
+
         Spark.delete("/db", this::clear);
         Spark.post("/user", this::register);
         Spark.post("/session", this::login);

@@ -11,7 +11,7 @@ import java.util.*;
 import static ui.EscapeSequences.*;
 
 
-public class Client {
+public final class Client {
 
     static ServerFacade server = new ServerFacade();
 
