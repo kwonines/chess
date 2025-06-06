@@ -5,6 +5,7 @@ import dataaccess.DatabaseManager;
 import dataaccess.exceptions.*;
 import dataaccess.DataAccessException;
 import model.requestandresult.*;
+import server.websocket.WebSocketHandler;
 import service.ClearService;
 import service.GameService;
 import service.UserService;
@@ -32,6 +33,7 @@ public class Server {
 
         Spark.staticFiles.location("web");
 
+        Spark.webSocket("/ws", WebSocketHandler.class);
         Spark.delete("/db", this::clear);
         Spark.post("/user", this::register);
         Spark.post("/session", this::login);
