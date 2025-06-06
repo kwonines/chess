@@ -84,7 +84,7 @@ public class ServerFacade {
             } else {
                 try (InputStream errorResponse = connection.getErrorStream()) {
                     InputStreamReader errorReader = new InputStreamReader(errorResponse);
-                    ErrorMessage message = new Gson().fromJson(errorReader, ErrorMessage.class);
+                    HTTPErrorMessage message = new Gson().fromJson(errorReader, HTTPErrorMessage.class);
                     throw new ResponseException(message.message());
                 }
             }

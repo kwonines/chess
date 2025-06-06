@@ -32,7 +32,7 @@ public class WebSocketHandler {
         try {
             AuthData auth = dataAccess.findAuth(command.getAuthToken());
             if (auth == null) {
-                session.getRemote().sendString(gson.toJson(new ErrorMessage("Error: unauthorized")));
+                session.getRemote().sendString(gson.toJson(new WSErrorMessage("Error: unauthorized")));
             } else {
                 String username = auth.username();
                 switch (command.getCommandType()) {
@@ -48,6 +48,11 @@ public class WebSocketHandler {
     private void connect(Session session, String username, UserGameCommand command) throws IOException, ServerErrorException {
         connections.add(username, new ConnectionData(username, command.getGameID(), session));
         GameData gameData = gameDataAccess.findGame(command.getGameID());
+        if (gameData == null) {
+            session.getRemote().sendString(gson.toJson(new WSErrorMessage("Error: game does not exist")));
+            return;
+        }
+
         Notification notification;
 
         if (gameData.whiteUsername().equals(username)) {

@@ -58,7 +58,7 @@ public class Server {
             return new Gson().toJson(null);
         } catch (ServerErrorException exception) {
             response.status(500);
-            return new Gson().toJson(new ErrorMessage(exception.getMessage()));
+            return new Gson().toJson(new HTTPErrorMessage(exception.getMessage()));
         }
     }
 
@@ -71,13 +71,13 @@ public class Server {
             return gson.toJson(result);
         } catch (UsernameTakenException exception) {
             response.status(403);
-            return gson.toJson(new ErrorMessage(exception.getMessage()));
+            return gson.toJson(new HTTPErrorMessage(exception.getMessage()));
         } catch (BadRequestException exception) {
             response.status(400);
-            return gson.toJson(new ErrorMessage(exception.getMessage()));
+            return gson.toJson(new HTTPErrorMessage(exception.getMessage()));
         } catch (ServerErrorException exception) {
             response.status(500);
-            return gson.toJson(new ErrorMessage(exception.getMessage()));
+            return gson.toJson(new HTTPErrorMessage(exception.getMessage()));
         }
     }
 
@@ -90,13 +90,13 @@ public class Server {
             return gson.toJson(result);
         } catch (UnauthorizedException exception) {
             response.status(401);
-            return gson.toJson(new ErrorMessage(exception.getMessage()));
+            return gson.toJson(new HTTPErrorMessage(exception.getMessage()));
         } catch (BadRequestException exception) {
             response.status(400);
-            return gson.toJson(new ErrorMessage(exception.getMessage()));
+            return gson.toJson(new HTTPErrorMessage(exception.getMessage()));
         } catch (ServerErrorException exception) {
             response.status(500);
-            return gson.toJson(new ErrorMessage(exception.getMessage()));
+            return gson.toJson(new HTTPErrorMessage(exception.getMessage()));
         }
     }
 
@@ -110,10 +110,10 @@ public class Server {
             return gson.toJson(null);
         } catch (UnauthorizedException exception) {
             response.status(401);
-            return gson.toJson(new ErrorMessage(exception.getMessage()));
+            return gson.toJson(new HTTPErrorMessage(exception.getMessage()));
         } catch (ServerErrorException exception) {
             response.status(500);
-            return gson.toJson(new ErrorMessage(exception.getMessage()));
+            return gson.toJson(new HTTPErrorMessage(exception.getMessage()));
         }
     }
 
@@ -127,10 +127,10 @@ public class Server {
             return gson.toJson(listResult);
         } catch (UnauthorizedException exception) {
             response.status(401);
-            return gson.toJson(new ErrorMessage(exception.getMessage()));
+            return gson.toJson(new HTTPErrorMessage(exception.getMessage()));
         } catch (ServerErrorException exception) {
             response.status(500);
-            return gson.toJson(new ErrorMessage(exception.getMessage()));
+            return gson.toJson(new HTTPErrorMessage(exception.getMessage()));
         }
     }
 
@@ -144,13 +144,13 @@ public class Server {
             return gson.toJson(result);
         } catch (UnauthorizedException exception) {
             response.status(401);
-            return gson.toJson(new ErrorMessage(exception.getMessage()));
+            return gson.toJson(new HTTPErrorMessage(exception.getMessage()));
         } catch (BadRequestException exception) {
             response.status(400);
-            return gson.toJson(new ErrorMessage(exception.getMessage()));
+            return gson.toJson(new HTTPErrorMessage(exception.getMessage()));
         } catch (ServerErrorException exception) {
             response.status(500);
-            return gson.toJson(new ErrorMessage(exception.getMessage()));
+            return gson.toJson(new HTTPErrorMessage(exception.getMessage()));
         }
     }
 
@@ -164,16 +164,16 @@ public class Server {
             return gson.toJson(null);
         } catch (UnauthorizedException exception) {
             response.status(401);
-            return gson.toJson(new ErrorMessage(exception.getMessage()));
+            return gson.toJson(new HTTPErrorMessage(exception.getMessage()));
         } catch (BadRequestException exception) {
             response.status(400);
-            return gson.toJson(new ErrorMessage(exception.getMessage()));
+            return gson.toJson(new HTTPErrorMessage(exception.getMessage()));
         } catch (ColorTakenException exception) {
             response.status(403);
-            return gson.toJson(new ErrorMessage(exception.getMessage()));
+            return gson.toJson(new HTTPErrorMessage(exception.getMessage()));
         } catch (ServerErrorException exception) {
             response.status(500);
-            return gson.toJson(new ErrorMessage(exception.getMessage()));
+            return gson.toJson(new HTTPErrorMessage(exception.getMessage()));
         }
     }
 
