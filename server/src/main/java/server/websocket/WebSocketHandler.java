@@ -79,7 +79,7 @@ public class WebSocketHandler {
     private void makeMove(Session session, String username, MakeMoveCommand command) throws IOException, ServerErrorException {
         try {
             GameData gameData = gameDataAccess.findGame(command.getGameID());
-            if (!(username.equals(gameData.whiteUsername()) && !(username.equals(gameData.blackUsername())))) {
+            if (!(username.equals(gameData.whiteUsername())) && !(username.equals(gameData.blackUsername()))) {
                 session.getRemote().sendString(gson.toJson(new WSErrorMessage("Error: cannot make moves as an observer")));
                 return;
             }
@@ -119,7 +119,7 @@ public class WebSocketHandler {
     private void resign(Session session, String username, UserGameCommand command) throws ServerErrorException, IOException {
         GameData gameData = gameDataAccess.findGame(command.getGameID());
         ChessGame game = gameData.game();
-        game.setGameOver(true);
+        game.end();
 
         gameDataAccess.updateGame(command.getGameID(), new GameData(command.getGameID(), gameData.whiteUsername(), gameData.blackUsername(), gameData.gameName(), game));
         connections.notify(command.getGameID(), username, new Notification(username + " has resigned"));

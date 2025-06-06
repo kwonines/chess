@@ -61,8 +61,8 @@ public class ChessGame {
         return gameOver;
     }
 
-    public void setGameOver(boolean gameOver) {
-        this.gameOver = gameOver;
+    public void end() {
+        this.gameOver = true;
     }
 
     /**
