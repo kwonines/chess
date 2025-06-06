@@ -1,6 +1,5 @@
 package server.websocket;
 
-
 import chess.ChessGame;
 import chess.InvalidMoveException;
 import com.google.gson.Gson;
@@ -13,7 +12,6 @@ import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 import websocket.commands.*;
 import websocket.messages.*;
 import dataaccess.*;
-
 import java.io.IOException;
 
 @WebSocket
@@ -37,10 +35,14 @@ public class WebSocketHandler {
                 String username = auth.username();
                 switch (command.getCommandType()) {
                     case CONNECT:
-                        connect(session, username, command); break;
+                        connect(session, username, command);
+                        break;
                     case MAKE_MOVE:
                         command = gson.fromJson(message, MakeMoveCommand.class);
                         makeMove(session, username, (MakeMoveCommand) command);
+                        break;
+                    case LEAVE:
+                        leave(username, command);
                         break;
                 }
             }
@@ -90,5 +92,18 @@ public class WebSocketHandler {
         } catch (InvalidMoveException e) {
             session.getRemote().sendString(gson.toJson(new WSErrorMessage("Error: invalid move")));
         }
+    }
+
+    private void leave(String username, UserGameCommand command) throws ServerErrorException, IOException {
+        GameData oldGame = gameDataAccess.findGame(command.getGameID());
+        if (username.equals(oldGame.whiteUsername())) {
+            gameDataAccess.updateGame(command.getGameID(),
+                    new GameData(oldGame.gameID(), null, oldGame.blackUsername(), oldGame.gameName(), oldGame.game()));
+        } else if (username.equals(oldGame.blackUsername())) {
+            gameDataAccess.updateGame(command.getGameID(),
+                    new GameData(oldGame.gameID(), oldGame.whiteUsername(), null, oldGame.gameName(), oldGame.game()));
+        }
+        connections.notify(command.getGameID(), username, new Notification(username + " has left the game"));
+        connections.remove(username);
     }
 }
