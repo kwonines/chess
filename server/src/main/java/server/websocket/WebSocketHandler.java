@@ -44,6 +44,9 @@ public class WebSocketHandler {
                     case LEAVE:
                         leave(username, command);
                         break;
+                    case RESIGN:
+                        resign(session, username, command);
+                        break;
                 }
             }
         } catch (ServerErrorException | IOException exception) {
@@ -82,6 +85,12 @@ public class WebSocketHandler {
             }
 
             ChessGame game = gameData.game();
+
+            if (game.isGameOver()) {
+                session.getRemote().sendString(gson.toJson(new WSErrorMessage("Error: game is over, cannot make moves")));
+                return;
+            }
+
             game.makeMove(command.getMove());
 
             GameData updatedGame = new GameData(command.getGameID(), gameData.whiteUsername(), gameData.blackUsername(), gameData.gameName(), game);
@@ -105,5 +114,15 @@ public class WebSocketHandler {
         }
         connections.notify(command.getGameID(), username, new Notification(username + " has left the game"));
         connections.remove(username);
+    }
+
+    private void resign(Session session, String username, UserGameCommand command) throws ServerErrorException, IOException {
+        GameData gameData = gameDataAccess.findGame(command.getGameID());
+        ChessGame game = gameData.game();
+        game.setGameOver(true);
+
+        gameDataAccess.updateGame(command.getGameID(), new GameData(command.getGameID(), gameData.whiteUsername(), gameData.blackUsername(), gameData.gameName(), game));
+        connections.notify(command.getGameID(), username, new Notification(username + " has resigned"));
+        session.getRemote().sendString(gson.toJson(new Notification("You have resigned")));
     }
 }

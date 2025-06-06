@@ -13,6 +13,7 @@ public class ChessGame {
 
     private TeamColor turn = TeamColor.WHITE;
     ChessBoard gameBoard = new ChessBoard();
+    private boolean gameOver = false;
 
     public ChessGame() {
         gameBoard.resetBoard();
@@ -56,6 +57,14 @@ public class ChessGame {
         BLACK
     }
 
+    public boolean isGameOver() {
+        return gameOver;
+    }
+
+    public void setGameOver(boolean gameOver) {
+        this.gameOver = gameOver;
+    }
+
     /**
      * Gets valid moves for a piece at the given location
      *
@@ -96,7 +105,7 @@ public class ChessGame {
      */
     public void makeMove(ChessMove move) throws InvalidMoveException {
         Collection<ChessMove> validMoveList = validMoves(move.getStartPosition());
-        if (validMoveList == null || gameBoard.getPiece(move.getStartPosition()).getTeamColor() != turn||!validMoveList.contains(move)) {
+        if (validMoveList == null || gameBoard.getPiece(move.getStartPosition()).getTeamColor() != turn || !validMoveList.contains(move)) {
             throw new InvalidMoveException("Move is not valid");
         } else if (move.getPromotionPiece() == null) {
             gameBoard.addPiece(move.getEndPosition(), gameBoard.getPiece(move.getStartPosition()));
@@ -109,7 +118,7 @@ public class ChessGame {
 
         if (turn == TeamColor.WHITE) {
             turn = TeamColor.BLACK;
-        } else {
+        } else if (turn == TeamColor.BLACK) {
             turn = TeamColor.WHITE;
         }
     }
