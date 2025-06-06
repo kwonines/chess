@@ -82,7 +82,7 @@ public class WebSocketHandler {
             ChessGame.TeamColor userColor;
             if (username.equals(gameData.whiteUsername())) {
                 userColor = ChessGame.TeamColor.WHITE;
-            } if (username.equals(gameData.blackUsername())) {
+            } else if (username.equals(gameData.blackUsername())) {
                 userColor = ChessGame.TeamColor.BLACK;
             } else {
                 session.getRemote().sendString(gson.toJson(new WSErrorMessage("Error: cannot make moves as an observer")));
