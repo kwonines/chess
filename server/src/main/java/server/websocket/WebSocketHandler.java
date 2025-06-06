@@ -79,12 +79,22 @@ public class WebSocketHandler {
     private void makeMove(Session session, String username, MakeMoveCommand command) throws IOException, ServerErrorException {
         try {
             GameData gameData = gameDataAccess.findGame(command.getGameID());
-            if (!(username.equals(gameData.whiteUsername())) && !(username.equals(gameData.blackUsername()))) {
+            ChessGame.TeamColor userColor;
+            if (username.equals(gameData.whiteUsername())) {
+                userColor = ChessGame.TeamColor.WHITE;
+            } if (username.equals(gameData.blackUsername())) {
+                userColor = ChessGame.TeamColor.BLACK;
+            } else {
                 session.getRemote().sendString(gson.toJson(new WSErrorMessage("Error: cannot make moves as an observer")));
                 return;
             }
 
             ChessGame game = gameData.game();
+
+            if (game.getTeamTurn() != userColor) {
+                session.getRemote().sendString(gson.toJson(new WSErrorMessage("Error: not your turn")));
+                return;
+            }
 
             if (game.isGameOver()) {
                 session.getRemote().sendString(gson.toJson(new WSErrorMessage("Error: game is over, cannot make moves")));
@@ -118,7 +128,18 @@ public class WebSocketHandler {
 
     private void resign(Session session, String username, UserGameCommand command) throws ServerErrorException, IOException {
         GameData gameData = gameDataAccess.findGame(command.getGameID());
+
+        if (!(username.equals(gameData.whiteUsername())) && !(username.equals(gameData.blackUsername()))) {
+            session.getRemote().sendString(gson.toJson(new WSErrorMessage("Error: cannot make moves as an observer")));
+            return;
+        }
+
         ChessGame game = gameData.game();
+
+        if (game.isGameOver()) {
+            session.getRemote().sendString(gson.toJson(new WSErrorMessage("Error: game is already over")));
+            return;
+        }
         game.end();
 
         gameDataAccess.updateGame(command.getGameID(), new GameData(command.getGameID(), gameData.whiteUsername(), gameData.blackUsername(), gameData.gameName(), game));
