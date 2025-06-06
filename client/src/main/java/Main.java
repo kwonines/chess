@@ -7,7 +7,7 @@ public class Main {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
 
-        System.out.print("Welcome to Chess! Enter a command to begin:\n   register\n   login\n   quit\n>");
+        System.out.print("Welcome to Chess! Enter a command to begin:\n   register\n   login\n   quit\n   help\n>");
         String input = scanner.nextLine();
 
         while (!Objects.equals(input, "quit")) {
@@ -28,7 +28,7 @@ public class Main {
                     }
                     break;
                 case "help":
-                    System.out.println("Type any of the following commands to use them:\n   register\n   login\n   quit");
+                    System.out.println("Type any of the following commands to use them:\n   register\n   login\n   quit\n  help");
                     break;
                 default:
                     System.out.println("Unknown command, please try again (or type \"help\" for list of available commands)");
@@ -50,7 +50,6 @@ public class Main {
                 case "help":
                     System.out.println("""
                             Type any of the following commands to use them:\
-                            
                                logout
                                create
                                list
