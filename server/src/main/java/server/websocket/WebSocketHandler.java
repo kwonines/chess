@@ -78,9 +78,13 @@ public class WebSocketHandler {
                 session.getRemote().sendString(gson.toJson(new WSErrorMessage("Error: cannot make moves as an observer")));
                 return;
             }
+
             ChessGame game = gameData.game();
             game.makeMove(command.getMove());
-            //TODO: update game in database here
+
+            GameData updatedGame = new GameData(command.getGameID(), gameData.whiteUsername(), gameData.blackUsername(), gameData.gameName(), game);
+            gameDataAccess.updateGame(command.getGameID(), updatedGame);
+
             connections.notify(command.getGameID(), username, new Notification(username + " made move: " + command.getMove().toString()));
             connections.sendBoard(command.getGameID(), game);
         } catch (InvalidMoveException e) {
