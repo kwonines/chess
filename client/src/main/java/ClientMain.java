@@ -3,8 +3,8 @@ import ui.Client;
 
 import java.util.*;
 
-public class Main {
-    public static void main(String[] args) {
+public class ClientMain {
+    public static void main(String[] args) throws Exception {
         Scanner scanner = new Scanner(System.in);
 
         System.out.print("Welcome to Chess! Enter a command to begin:\n   register\n   login\n   quit\n   help\n>");
@@ -40,7 +40,7 @@ public class Main {
         scanner.close();
     }
 
-    private static void startLoggedInLoop(String authToken) {
+    private static void startLoggedInLoop(String authToken) throws Exception {
         Scanner scanner = new Scanner(System.in);
         String input = scanner.nextLine();
         HashMap<Integer, GameData> games = new HashMap<>();

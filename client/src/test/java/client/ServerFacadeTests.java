@@ -94,7 +94,7 @@ class ServerFacadeTests {
     }
 
     @Test
-    void joinGameSuccess() {
+    void joinGameSuccess() throws Exception {
         facade.createGame(existingAuth, "newGame");
         int gameID = facade.listGames(existingAuth).games().getFirst().gameID();
         facade.joinGame(ChessGame.TeamColor.WHITE, gameID, existingAuth);

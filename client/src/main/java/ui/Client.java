@@ -137,6 +137,8 @@ public final class Client {
             }
         } catch (ResponseException exception) {
             System.out.println(exception.getMessage());
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
     }
 
