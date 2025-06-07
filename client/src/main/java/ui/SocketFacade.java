@@ -17,7 +17,7 @@ public class SocketFacade extends Endpoint {
 
         this.session.addMessageHandler(new MessageHandler.Whole<String>() {
             public void onMessage(String message) {
-                System.out.println(message);
+                Client.messageParser(message);
             }
         });
     }

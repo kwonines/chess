@@ -4,7 +4,10 @@ import chess.ChessBoard;
 import chess.ChessGame;
 import chess.ChessPiece;
 import chess.ChessPosition;
+import com.google.gson.Gson;
 import model.GameData;
+import websocket.messages.LoadGameMessage;
+import websocket.messages.ServerMessage;
 
 import java.util.*;
 
@@ -14,6 +17,17 @@ import static ui.EscapeSequences.*;
 public final class Client {
 
     static ServerFacade server = new ServerFacade();
+
+    public static void messageParser(String jsonMessage) {
+        Gson gson = new Gson();
+        ServerMessage message = gson.fromJson(jsonMessage, ServerMessage.class);
+        switch (message.getServerMessageType()) {
+            case LOAD_GAME:
+                LoadGameMessage loadMessage = gson.fromJson(jsonMessage, LoadGameMessage.class);
+                drawBoard(loadMessage.game().getBoard(), ChessGame.TeamColor.WHITE);
+
+        }
+    }
 
     public static String register(Scanner scanner) {
         System.out.println("Enter a username to register:");
