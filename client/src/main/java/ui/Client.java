@@ -16,7 +16,8 @@ import static ui.EscapeSequences.*;
 
 public final class Client {
 
-    static ServerFacade server = new ServerFacade();
+    private static final ServerFacade server = new ServerFacade();
+    private static ChessBoard latestBoard = null;
 
     public static void messageParser(String jsonMessage) {
         Gson gson = new Gson();
@@ -24,7 +25,12 @@ public final class Client {
         switch (message.getServerMessageType()) {
             case LOAD_GAME:
                 LoadGameMessage loadMessage = gson.fromJson(jsonMessage, LoadGameMessage.class);
-                drawBoard(loadMessage.game().getBoard(), ChessGame.TeamColor.WHITE);
+                if (loadMessage.game() == null) {
+                    drawBoard(latestBoard, PlayerColor.getPlayerColor());
+                } else {
+                    latestBoard = loadMessage.game().getBoard();
+                    drawBoard(latestBoard, PlayerColor.getPlayerColor());
+                }
 
         }
     }
@@ -138,10 +144,12 @@ public final class Client {
                 System.out.println("Enter (w)hite to join as white, or (b)lack to join as black");
                 String stringColor = scanner.nextLine();
                 if (Objects.equals(stringColor, "w") || Objects.equals(stringColor, "white")) {
+                    PlayerColor.setPlayerColor(ChessGame.TeamColor.WHITE);
                     server.joinGame(ChessGame.TeamColor.WHITE, games.get(gameNumber).gameID(), authToken);
                     System.out.println("Successfully joined game " + gameNumber + " as white player");
                     drawBoard(games.get(gameNumber).game().getBoard(), ChessGame.TeamColor.WHITE);
                 } else if (Objects.equals(stringColor, "b") || Objects.equals(stringColor, "black")) {
+                    PlayerColor.setPlayerColor(ChessGame.TeamColor.BLACK);
                     server.joinGame(ChessGame.TeamColor.BLACK, games.get(gameNumber).gameID(), authToken);
                     System.out.println("Successfully joined game " + gameNumber + " as black player");
                     drawBoard(games.get(gameNumber).game().getBoard(), ChessGame.TeamColor.BLACK);
