@@ -17,7 +17,7 @@ public class SocketFacade extends Endpoint {
 
         this.session.addMessageHandler(new MessageHandler.Whole<String>() {
             public void onMessage(String message) {
-                Client.messageParser(message);
+                Client.parseMessage(message);
             }
         });
     }
@@ -27,7 +27,16 @@ public class SocketFacade extends Endpoint {
         this.session.getBasicRemote().sendText(msg);
     }
 
-    public void onOpen(Session session, EndpointConfig endpointConfig) {
+    public void leave(UserGameCommand command) throws Exception {
+        String msg = new Gson().toJson(command);
+        this.session.getBasicRemote().sendText(msg);
     }
+
+    public void resign(UserGameCommand command) throws Exception {
+        String msg = new Gson().toJson(command);
+        this.session.getBasicRemote().sendText(msg);
+    }
+
+    public void onOpen(Session session, EndpointConfig endpointConfig) {}
 }
 

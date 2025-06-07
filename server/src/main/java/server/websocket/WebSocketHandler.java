@@ -13,6 +13,7 @@ import websocket.commands.*;
 import websocket.messages.*;
 import dataaccess.*;
 import java.io.IOException;
+import java.util.Objects;
 
 @WebSocket
 public class WebSocketHandler {
@@ -62,9 +63,9 @@ public class WebSocketHandler {
         }
 
         Notification notification;
-        if (gameData.whiteUsername().equals(username)) {
+        if (Objects.equals(gameData.whiteUsername(), username)) {
             notification = new Notification(username + " has joined the game as white");
-        } else if (gameData.blackUsername().equals(username)) {
+        } else if (Objects.equals(gameData.blackUsername(), username)) {
             notification = new Notification(username + " has joined the game as black");
         } else {
             notification = new Notification(username + " is observing the game");

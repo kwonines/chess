@@ -7,7 +7,9 @@ import chess.ChessPosition;
 import com.google.gson.Gson;
 import model.GameData;
 import websocket.messages.LoadGameMessage;
+import websocket.messages.Notification;
 import websocket.messages.ServerMessage;
+import websocket.messages.WSErrorMessage;
 
 import java.util.*;
 
@@ -17,9 +19,9 @@ import static ui.EscapeSequences.*;
 public final class Client {
 
     private static final ServerFacade server = new ServerFacade();
-    private static ChessBoard latestBoard = null;
+    private static ChessBoard latestBoard;
 
-    public static void messageParser(String jsonMessage) {
+    public static void parseMessage(String jsonMessage) {
         Gson gson = new Gson();
         ServerMessage message = gson.fromJson(jsonMessage, ServerMessage.class);
         switch (message.getServerMessageType()) {
@@ -31,7 +33,15 @@ public final class Client {
                     latestBoard = loadMessage.game().getBoard();
                     drawBoard(latestBoard, PlayerColor.getPlayerColor());
                 }
-
+                break;
+            case NOTIFICATION:
+                Notification notification = gson.fromJson(jsonMessage, Notification.class);
+                System.out.println(notification.message());
+                break;
+            case ERROR:
+                WSErrorMessage errorMessage = gson.fromJson(jsonMessage, WSErrorMessage.class);
+                System.out.println(errorMessage.errorMessage());
+                break;
         }
     }
 
@@ -143,16 +153,12 @@ public final class Client {
                 }
                 System.out.println("Enter (w)hite to join as white, or (b)lack to join as black");
                 String stringColor = scanner.nextLine();
-                if (Objects.equals(stringColor, "w") || Objects.equals(stringColor, "white")) {
-                    PlayerColor.setPlayerColor(ChessGame.TeamColor.WHITE);
-                    server.joinGame(ChessGame.TeamColor.WHITE, games.get(gameNumber).gameID(), authToken);
-                    System.out.println("Successfully joined game " + gameNumber + " as white player");
-                    drawBoard(games.get(gameNumber).game().getBoard(), ChessGame.TeamColor.WHITE);
-                } else if (Objects.equals(stringColor, "b") || Objects.equals(stringColor, "black")) {
+                if (Objects.equals(stringColor, "b") || Objects.equals(stringColor, "black")) {
                     PlayerColor.setPlayerColor(ChessGame.TeamColor.BLACK);
                     server.joinGame(ChessGame.TeamColor.BLACK, games.get(gameNumber).gameID(), authToken);
-                    System.out.println("Successfully joined game " + gameNumber + " as black player");
-                    drawBoard(games.get(gameNumber).game().getBoard(), ChessGame.TeamColor.BLACK);
+                } else if (Objects.equals(stringColor, "w") || Objects.equals(stringColor, "white")) {
+                    PlayerColor.setPlayerColor(ChessGame.TeamColor.WHITE);
+                    server.joinGame(ChessGame.TeamColor.WHITE, games.get(gameNumber).gameID(), authToken);
                 } else {
                     System.out.println("Error: incorrect color input. Please try again");
                 }

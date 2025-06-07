@@ -1,5 +1,6 @@
 import model.GameData;
 import ui.Client;
+import ui.GameplayLoop;
 
 import java.util.*;
 
@@ -49,7 +50,8 @@ public class ClientMain {
             switch (input) {
                 case "help":
                     System.out.println("""
-                            Type any of the following commands to use them:\
+                            Type any of the following commands to use them:
+                            
                                logout
                                create
                                list
