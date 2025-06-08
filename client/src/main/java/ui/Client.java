@@ -230,7 +230,7 @@ public final class Client {
             System.out.println();
             for (int row = 1; row < 9; row++) {
                 System.out.print(" " + (row) + " ");
-                for (int col = 1; col < 9; col++) {
+                for (int col = 8; col > 0; col--) {
                     printSquare(board, row, col);
                 }
                 System.out.print(RESET_BG_COLOR + " " + (row) + " ");

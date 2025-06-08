@@ -45,7 +45,6 @@ public class GameplayLoop {
                     } else {
                         System.out.println("The entered value is not a move. Please make sure you enter <START POSITION><END POSITION> (e.g. d3e4)");
                     }
-
             }
         }
     }
