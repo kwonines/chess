@@ -1,6 +1,7 @@
 package ui;
 
 import com.google.gson.Gson;
+import websocket.commands.MakeMoveCommand;
 import websocket.commands.UserGameCommand;
 
 import javax.websocket.*;
@@ -16,8 +17,8 @@ public class SocketFacade extends Endpoint {
         this.session = container.connectToServer(this, uri);
 
         this.session.addMessageHandler(new MessageHandler.Whole<String>() {
-            public void onMessage(String message) {
-                Client.parseMessage(message);
+            public void onMessage(String msg) {
+                Client.parseMessage(msg);
             }
         });
     }
@@ -33,6 +34,11 @@ public class SocketFacade extends Endpoint {
     }
 
     public void resign(UserGameCommand command) throws Exception {
+        String msg = new Gson().toJson(command);
+        this.session.getBasicRemote().sendText(msg);
+    }
+
+    public void makeMove(MakeMoveCommand command) throws Exception {
         String msg = new Gson().toJson(command);
         this.session.getBasicRemote().sendText(msg);
     }

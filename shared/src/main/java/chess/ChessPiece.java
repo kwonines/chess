@@ -24,7 +24,7 @@ public class ChessPiece {
 
     @Override
     public String toString() {
-        if (this.pieceColor == ChessGame.TeamColor.WHITE) {
+        if (this.pieceColor == ChessGame.TeamColor.BLACK) {
             return switch (this.type) {
                 case KING -> " ♔ ";
                 case QUEEN -> " ♕ ";

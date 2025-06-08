@@ -209,12 +209,12 @@ public final class Client {
                 System.out.print(FRONT_SPACER + columns[i] + END_SPACER);
             }
             System.out.println();
-            for (int row = 1; row < 9; row++) {
-                System.out.print(" " + (9 - row) + " ");
+            for (int row = 8; row > 0; row--) {
+                System.out.print(" " + (row) + " ");
                 for (int col = 1; col < 9; col++) {
                     printSquare(board, row, col);
                 }
-                System.out.print(RESET_BG_COLOR + " " + (9 - row) + " ");
+                System.out.print(RESET_BG_COLOR + " " + (row) + " ");
                 System.out.println();
             }
             System.out.print(EMPTY);
@@ -228,12 +228,12 @@ public final class Client {
                 System.out.print(FRONT_SPACER + columns[i] + END_SPACER);
             }
             System.out.println();
-            for (int row = 8; row > 0; row--) {
-                System.out.print(" " + (9 - row) + " ");
-                for (int col = 8; col > 0; col--) {
+            for (int row = 1; row < 9; row++) {
+                System.out.print(" " + (row) + " ");
+                for (int col = 1; col < 9; col++) {
                     printSquare(board, row, col);
                 }
-                System.out.print(RESET_BG_COLOR + " " + (9 - row) + " ");
+                System.out.print(RESET_BG_COLOR + " " + (row) + " ");
                 System.out.println();
             }
             System.out.print(EMPTY);
@@ -246,13 +246,13 @@ public final class Client {
 
     private static void printSquare(ChessBoard board, int row, int col) {
         if (row % 2 == 1 && col % 2 == 1) {
-            System.out.print(SET_BG_COLOR_LIGHT_GREY);
+            System.out.print(SET_BG_COLOR_DARK_GREY);
         } else if (row % 2 == 1) {
-            System.out.print(SET_BG_COLOR_DARK_GREY);
-        } else if (col % 2 == 1) {
-            System.out.print(SET_BG_COLOR_DARK_GREY);
-        } else {
             System.out.print(SET_BG_COLOR_LIGHT_GREY);
+        } else if (col % 2 == 1) {
+            System.out.print(SET_BG_COLOR_LIGHT_GREY);
+        } else {
+            System.out.print(SET_BG_COLOR_DARK_GREY);
         }
         ChessPiece piece = board.getPiece(new ChessPosition(row, col));
         if (piece == null) {
