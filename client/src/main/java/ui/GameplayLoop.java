@@ -17,12 +17,13 @@ public class GameplayLoop {
         String input;
         SocketFacade facade = new SocketFacade();
         facade.connect(new UserGameCommand(UserGameCommand.CommandType.CONNECT, authToken, gameID));
-        Thread.sleep(50);
+        Thread.sleep(75);
+        System.out.print(">");
         while (loop) {
             input = scanner.nextLine();
             switch (input) {
                 case "help":
-                    System.out.println("Enter one of the following commands: \n   redraw\n   leave\n   moveString\n   resign\n   highlight");
+                    System.out.println("Enter one of the following commands:\n   help\n   redraw\n   leave\n   move\n   resign\n   highlight");
                     break;
                 case "redraw":
                     Client.parseMessage(new Gson().toJson(new LoadGameMessage(null)));
@@ -45,8 +46,10 @@ public class GameplayLoop {
                     break;
                 default:
                     System.out.println("Unknown command. Please try again or type \"help\" for list of commands");
-                    System.out.print(">");
+                    break;
             }
+            Thread.sleep(75);
+            System.out.print(">");
         }
     }
 

@@ -34,14 +34,16 @@ public final class Client {
                 break;
             case NOTIFICATION:
                 Notification notification = gson.fromJson(jsonMessage, Notification.class);
+                System.out.println();
                 System.out.println(notification.message());
+                System.out.print(">");
                 break;
             case ERROR:
                 WSErrorMessage errorMessage = gson.fromJson(jsonMessage, WSErrorMessage.class);
+                System.out.println();
                 System.out.println(errorMessage.errorMessage());
                 break;
         }
-        System.out.print(">");
     }
 
     public static boolean checkForPromotion(ChessPosition startPosition, ChessPosition endPosition) {
@@ -266,12 +268,10 @@ public final class Client {
         ChessBoard board = latestGame.getBoard();
         if (board.getPiece(startPosition) == null) {
             System.out.println("There is no piece at this position");
-            System.out.print(">");
             return;
         }
         if (validMoves.isEmpty()) {
             System.out.println("This piece has no valid moves");
-            System.out.print(">");
             return;
         }
         char[] columns = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'};
@@ -298,7 +298,6 @@ public final class Client {
             }
             drawBlackColumnLetters(columns);
         }
-        System.out.print(">");
     }
 
     private static void printSquareType(ChessPosition startPosition, Collection<ChessMove> validMoves, ChessBoard board, int row, int col) {

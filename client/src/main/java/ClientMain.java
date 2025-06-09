@@ -27,7 +27,7 @@ public class ClientMain {
                     }
                     break;
                 case "help":
-                    System.out.println("Type any of the following commands to use them:\n   register\n   login\n   quit\n  help");
+                    System.out.println("Type any of the following commands to use them:\n   register\n   login\n   quit\n   help");
                     break;
                 default:
                     System.out.println("Unknown command, please try again (or type \"help\" for list of available commands)");
