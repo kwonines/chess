@@ -26,6 +26,13 @@ public class ObserveLoop {
                     facade.leave(new UserGameCommand(UserGameCommand.CommandType.LEAVE, authToken, gameID));
                     System.out.println("You have left the game");
                     loop = false;
+                    continue;
+                case "highlight":
+                    GameplayLoop.highlight(scanner);
+                    break;
+                default:
+                    System.out.println("Unknown command. Please try again or type \"help\" for list of commands");
+                    System.out.print(">");
             }
         }
     }
