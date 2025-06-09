@@ -1,7 +1,6 @@
 package ui;
 
 import com.google.gson.Gson;
-import websocket.commands.MakeMoveCommand;
 import websocket.commands.UserGameCommand;
 import websocket.messages.LoadGameMessage;
 
