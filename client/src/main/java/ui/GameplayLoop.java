@@ -38,22 +38,7 @@ public class GameplayLoop {
                 case "move":
                     System.out.print("Enter a move you would like to make (e.g. a1c3)\n>");
                     String moveString = scanner.nextLine();
-                    if (moveString.matches("^[a-h][1-8][a-h][1-8]$")) {
-                        ChessMove move = parseMove(moveString);
-                        if (Client.checkForPromotion(move.getStartPosition(), move.getEndPosition())) {
-                            System.out.println("Enter piece to promote to ('q' for queen, 'k' for knight, 'b' for bishop, 'r' for rook");
-                            String promotionPiece = scanner.nextLine();
-                            move = getPromotionMove(promotionPiece, move);
-                            if (move == null) {
-                                continue;
-                            }
-                        }
-                        facade.makeMove(new MakeMoveCommand(authToken, gameID, move));
-                        Thread.sleep(50);
-                    } else {
-                        System.out.println
-                                ("The entered value is not a move. Please make sure you enter <START POSITION><END POSITION> (e.g. d3e4)\n>");
-                    }
+                    makeMove(authToken, gameID, moveString, scanner, facade);
                     break;
                 case "highlight":
                     highlight(scanner);
@@ -65,25 +50,36 @@ public class GameplayLoop {
         }
     }
 
-    private static ChessMove getPromotionMove(String promotionPiece, ChessMove move) {
-        switch (promotionPiece) {
-            case "q":
-                move = new ChessMove(move.getStartPosition(), move.getEndPosition(), ChessPiece.PieceType.QUEEN);
-                break;
-            case "k":
-                move = new ChessMove(move.getStartPosition(), move.getEndPosition(), ChessPiece.PieceType.KNIGHT);
-                break;
-            case "b":
-                move = new ChessMove(move.getStartPosition(), move.getEndPosition(), ChessPiece.PieceType.BISHOP);
-                break;
-            case "r":
-                move = new ChessMove(move.getStartPosition(), move.getEndPosition(), ChessPiece.PieceType.ROOK);
-                break;
-            default:
-                System.out.println("Unknown input, please try to make the move again");
-                return null;
+    private static void makeMove(String authToken, int gameID, String moveString, Scanner scanner, SocketFacade facade) throws Exception {
+        if (moveString.matches("^[a-h][1-8][a-h][1-8]$")) {
+            ChessMove move = parseMove(moveString);
+            if (Client.checkForPromotion(move.getStartPosition(), move.getEndPosition())) {
+                System.out.println("Enter piece to promote to ('q' for queen, 'k' for knight, 'b' for bishop, 'r' for rook");
+                String promotionPiece = scanner.nextLine();
+                switch (promotionPiece) {
+                    case "q":
+                        move = new ChessMove(move.getStartPosition(), move.getEndPosition(), ChessPiece.PieceType.QUEEN);
+                        break;
+                    case "k":
+                        move = new ChessMove(move.getStartPosition(), move.getEndPosition(), ChessPiece.PieceType.KNIGHT);
+                        break;
+                    case "b":
+                        move = new ChessMove(move.getStartPosition(), move.getEndPosition(), ChessPiece.PieceType.BISHOP);
+                        break;
+                    case "r":
+                        move = new ChessMove(move.getStartPosition(), move.getEndPosition(), ChessPiece.PieceType.ROOK);
+                        break;
+                    default:
+                        System.out.println("Unknown input, please try to make the move again");
+                        return;
+                }
+            }
+            facade.makeMove(new MakeMoveCommand(authToken, gameID, move));
+            Thread.sleep(50);
+        } else {
+            System.out.println
+                    ("The entered value is not a move. Please make sure you enter <START POSITION><END POSITION> (e.g. d3e4)\n>");
         }
-        return move;
     }
 
     private static ChessMove parseMove(String moveString) {
