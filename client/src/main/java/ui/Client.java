@@ -54,77 +54,6 @@ public final class Client {
         }
     }
 
-    public static void highlightMoves(ChessPosition startPosition) {
-        ChessGame.TeamColor pov = PlayerColor.getPlayerColor();
-        Collection<ChessMove> validMoves = latestGame.validMoves(startPosition);
-        ChessBoard board = latestGame.getBoard();
-        if (board.getPiece(startPosition) == null) {
-            System.out.println("There is no piece at this position");
-            System.out.print(">");
-            return;
-        }
-        if (validMoves.isEmpty()) {
-            System.out.println("This piece has no valid moves");
-            System.out.print(">");
-            return;
-        }
-        char[] columns = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'};
-        if (pov == ChessGame.TeamColor.WHITE) {
-            System.out.print(EMPTY);
-            for (int i = 0; i < 8; i++) {
-                System.out.print(FRONT_SPACER + columns[i] + END_SPACER);
-            }
-            System.out.println();
-            for (int row = 8; row > 0; row--) {
-                System.out.print(" " + (row) + " ");
-                for (int col = 1; col < 9; col++) {
-                    printSquareType(startPosition, validMoves, board, row, col);
-                }
-                System.out.print(RESET_BG_COLOR + " " + (row) + " ");
-                System.out.println();
-            }
-            System.out.print(EMPTY);
-            for (int i = 0; i < 8; i++) {
-                System.out.print(FRONT_SPACER + columns[i] + END_SPACER);
-            }
-            System.out.println();
-        } else {
-            System.out.print(EMPTY);
-            for (int i = 7; i >= 0; i--) {
-                System.out.print(FRONT_SPACER + columns[i] + END_SPACER);
-            }
-            System.out.println();
-            for (int row = 1; row < 9; row++) {
-                System.out.print(" " + (row) + " ");
-                for (int col = 8; col > 0; col--) {
-                    printSquareType(startPosition, validMoves, board, row, col);
-                }
-                System.out.print(RESET_BG_COLOR + " " + (row) + " ");
-                System.out.println();
-            }
-            System.out.print(EMPTY);
-            for (int i = 7; i >= 0; i--) {
-                System.out.print(FRONT_SPACER + columns[i] + END_SPACER);
-            }
-            System.out.println();
-        }
-        System.out.print(">");
-    }
-
-    private static void printSquareType(ChessPosition startPosition, Collection<ChessMove> validMoves, ChessBoard board, int row, int col) {
-        ChessPosition endPosition;
-        ChessMove move;
-        ChessMove promotionMove;
-        endPosition = new ChessPosition(row, col);
-        move = new ChessMove(startPosition, endPosition);
-        promotionMove = new ChessMove(startPosition, endPosition, ChessPiece.PieceType.QUEEN);
-        if (validMoves.contains(move) || validMoves.contains(promotionMove)) {
-            printHighlight(board, row, col);
-        } else {
-            printNormal(board, row, col);
-        }
-    }
-
     public static String register(Scanner scanner) {
         System.out.println("Enter a username to register:");
         String regUsername = scanner.nextLine();
@@ -326,6 +255,77 @@ public final class Client {
                 System.out.print(FRONT_SPACER + columns[i] + END_SPACER);
             }
             System.out.println();
+        }
+    }
+
+    public static void highlightMoves(ChessPosition startPosition) {
+        ChessGame.TeamColor color = PlayerColor.getPlayerColor();
+        Collection<ChessMove> validMoves = latestGame.validMoves(startPosition);
+        ChessBoard board = latestGame.getBoard();
+        if (board.getPiece(startPosition) == null) {
+            System.out.println("There is no piece at this position");
+            System.out.print(">");
+            return;
+        }
+        if (validMoves.isEmpty()) {
+            System.out.println("This piece has no valid moves");
+            System.out.print(">");
+            return;
+        }
+        char[] columns = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'};
+        if (color == ChessGame.TeamColor.WHITE) {
+            System.out.print(EMPTY);
+            for (int i = 0; i < 8; i++) {
+                System.out.print(FRONT_SPACER + columns[i] + END_SPACER);
+            }
+            System.out.println();
+            for (int row = 8; row > 0; row--) {
+                System.out.print(" " + (row) + " ");
+                for (int col = 1; col < 9; col++) {
+                    printSquareType(startPosition, validMoves, board, row, col);
+                }
+                System.out.print(RESET_BG_COLOR + " " + (row) + " ");
+                System.out.println();
+            }
+            System.out.print(EMPTY);
+            for (int i = 0; i < 8; i++) {
+                System.out.print(FRONT_SPACER + columns[i] + END_SPACER);
+            }
+            System.out.println();
+        } else {
+            System.out.print(EMPTY);
+            for (int i = 7; i >= 0; i--) {
+                System.out.print(FRONT_SPACER + columns[i] + END_SPACER);
+            }
+            System.out.println();
+            for (int row = 1; row < 9; row++) {
+                System.out.print(" " + (row) + " ");
+                for (int col = 8; col > 0; col--) {
+                    printSquareType(startPosition, validMoves, board, row, col);
+                }
+                System.out.print(RESET_BG_COLOR + " " + (row) + " ");
+                System.out.println();
+            }
+            System.out.print(EMPTY);
+            for (int i = 7; i >= 0; i--) {
+                System.out.print(FRONT_SPACER + columns[i] + END_SPACER);
+            }
+            System.out.println();
+        }
+        System.out.print(">");
+    }
+
+    private static void printSquareType(ChessPosition startPosition, Collection<ChessMove> validMoves, ChessBoard board, int row, int col) {
+        ChessPosition endPosition;
+        ChessMove move;
+        ChessMove promotionMove;
+        endPosition = new ChessPosition(row, col);
+        move = new ChessMove(startPosition, endPosition);
+        promotionMove = new ChessMove(startPosition, endPosition, ChessPiece.PieceType.QUEEN);
+        if (validMoves.contains(move) || validMoves.contains(promotionMove)) {
+            printHighlight(board, row, col);
+        } else {
+            printNormal(board, row, col);
         }
     }
 
