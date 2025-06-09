@@ -104,33 +104,26 @@ public class WebSocketHandler {
 
             game.makeMove(command.getMove());
 
-            String message = username + " made move: " + command.getMove().toString();
-
-            if (game.isInStalemate(ChessGame.TeamColor.WHITE) || game.isInStalemate(ChessGame.TeamColor.BLACK)) {
-                message += "\nThe game had ended in stalemate";
-                username = null;
-                game.end();
-            } else if (game.isInCheckmate(ChessGame.TeamColor.WHITE)) {
-                message += "\n" + gameData.whiteUsername() + " is in checkmate. Black has won!";
-                username = null;
-                game.end();
-            } else if (game.isInCheckmate(ChessGame.TeamColor.BLACK)) {
-                message += "\n" + gameData.blackUsername() + " is in checkmate. White has won!";
-                username = null;
-                game.end();
-            } else if (game.isInCheck(ChessGame.TeamColor.WHITE)) {
-                message += "\n" + gameData.whiteUsername() + " is in check";
-                username = null;
-            } else if (game.isInCheck(ChessGame.TeamColor.BLACK)) {
-                message += "\n" + gameData.blackUsername() + " is in check";
-                username = null;
-            }
-
             GameData updatedGame = new GameData(command.getGameID(), gameData.whiteUsername(), gameData.blackUsername(), gameData.gameName(), game);
             gameDataAccess.updateGame(command.getGameID(), updatedGame);
 
             connections.sendBoard(command.getGameID(), game);
-            connections.notify(command.getGameID(), username, new Notification(message));
+            connections.notify(command.getGameID(), username, new Notification(username + " made move: " + command.getMove().toString()));
+
+            if (game.isInStalemate(ChessGame.TeamColor.WHITE) || game.isInStalemate(ChessGame.TeamColor.BLACK)) {
+                connections.notify(command.getGameID(), null, new Notification("The game has ended in stalemate"));
+                game.end();
+            } else if (game.isInCheckmate(ChessGame.TeamColor.WHITE)) {
+                connections.notify(command.getGameID(), null, new Notification(gameData.whiteUsername() + " is in checkmate. Black has won!"));
+                game.end();
+            } else if (game.isInCheckmate(ChessGame.TeamColor.BLACK)) {
+                connections.notify(command.getGameID(), null, new Notification(gameData.blackUsername() + " is in checkmate. White has won!"));
+                game.end();
+            } else if (game.isInCheck(ChessGame.TeamColor.WHITE)) {
+                connections.notify(command.getGameID(), null, new Notification(gameData.whiteUsername() + " is in check"));
+            } else if (game.isInCheck(ChessGame.TeamColor.BLACK)) {
+                connections.notify(command.getGameID(), null, new Notification(gameData.blackUsername() + " is in check"));
+            }
         } catch (InvalidMoveException e) {
             session.getRemote().sendString(gson.toJson(new WSErrorMessage("Error: invalid move")));
         }

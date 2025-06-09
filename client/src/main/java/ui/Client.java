@@ -236,9 +236,11 @@ public final class Client {
                 if (Objects.equals(stringColor, "b") || Objects.equals(stringColor, "black")) {
                     PlayerColor.setPlayerColor(ChessGame.TeamColor.BLACK);
                     server.joinGame(ChessGame.TeamColor.BLACK, games.get(gameNumber).gameID(), authToken);
+                    new GameplayLoop().run(authToken, games.get(gameNumber).gameID());
                 } else if (Objects.equals(stringColor, "w") || Objects.equals(stringColor, "white")) {
                     PlayerColor.setPlayerColor(ChessGame.TeamColor.WHITE);
                     server.joinGame(ChessGame.TeamColor.WHITE, games.get(gameNumber).gameID(), authToken);
+                    new GameplayLoop().run(authToken, games.get(gameNumber).gameID());
                 } else {
                     System.out.println("Error: incorrect color input. Please try again");
                 }

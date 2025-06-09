@@ -47,10 +47,9 @@ public class ServerFacade {
         makeRequest("POST", "/game", request, null, authToken);
     }
 
-    public void joinGame(ChessGame.TeamColor color, int gameID, String authToken) throws Exception {
+    public void joinGame(ChessGame.TeamColor color, int gameID, String authToken) {
         JoinRequest request = new JoinRequest(color, gameID, authToken);
         makeRequest("PUT", "/game", request, null, authToken);
-        new GameplayLoop().run(authToken, gameID);
     }
 
     private <T> T makeRequest(String method, String path, Object request, Class<T> responseType, String authToken) throws ResponseException {
