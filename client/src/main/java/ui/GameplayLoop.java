@@ -16,9 +16,8 @@ public class GameplayLoop {
         String input;
         SocketFacade facade = new SocketFacade();
         facade.connect(new UserGameCommand(UserGameCommand.CommandType.CONNECT, authToken, gameID));
+        Thread.sleep(50);
         while (loop) {
-            System.out.println("Enter a command");
-            System.out.print(">");
             input = scanner.nextLine();
             switch (input) {
                 case "help":
@@ -29,19 +28,18 @@ public class GameplayLoop {
                     break;
                 case "leave":
                     facade.leave(new UserGameCommand(UserGameCommand.CommandType.LEAVE, authToken, gameID));
+                    System.out.println("You have left the game");
                     loop = false;
                     continue;
                 case "resign":
                     facade.resign(new UserGameCommand(UserGameCommand.CommandType.RESIGN, authToken, gameID));
-                    loop = false;
-                    continue;
                 case "move":
                     System.out.print("Enter a move you would like to make (e.g. a1c3)\n>");
                     String moveString = scanner.nextLine();
                     if (moveString.matches("^[a-h][1-8][a-h][1-8]$")) {
                         MakeMoveCommand command = getMoveCommand(authToken, gameID, moveString);
                         facade.makeMove(command);
-                        Client.parseMessage(new Gson().toJson(new LoadGameMessage(null)));
+                        Thread.sleep(50);
                     } else {
                         System.out.println("The entered value is not a move. Please make sure you enter <START POSITION><END POSITION> (e.g. d3e4)");
                     }

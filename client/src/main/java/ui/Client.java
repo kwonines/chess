@@ -27,6 +27,7 @@ public final class Client {
         switch (message.getServerMessageType()) {
             case LOAD_GAME:
                 LoadGameMessage loadMessage = gson.fromJson(jsonMessage, LoadGameMessage.class);
+                System.out.println();
                 if (loadMessage.game() == null) {
                     drawBoard(latestBoard, PlayerColor.getPlayerColor());
                 } else {
@@ -43,6 +44,7 @@ public final class Client {
                 System.out.println(errorMessage.errorMessage());
                 break;
         }
+        System.out.print(">");
     }
 
     public static String register(Scanner scanner) {
@@ -194,10 +196,13 @@ public final class Client {
                     System.out.println("Game does not exist, please try to observe again");
                     return;
                 }
-                drawBoard(games.get(gameNumber).game().getBoard(), ChessGame.TeamColor.WHITE);
+                PlayerColor.setPlayerColor(ChessGame.TeamColor.WHITE);
+                new ObserveLoop().run(authToken, games.get(gameNumber).gameID());
             }
         } catch (ResponseException exception) {
             System.out.println(exception.getMessage());
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
     }
 

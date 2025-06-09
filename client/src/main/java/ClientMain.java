@@ -51,12 +51,12 @@ public class ClientMain {
                 case "help":
                     System.out.println("""
                             Type any of the following commands to use them:
-                            
                                logout
                                create
                                list
                                join
-                               observe""");
+                               observe
+                               help""");
                     break;
                 case "logout":
                     if (Client.logout(authToken)) {

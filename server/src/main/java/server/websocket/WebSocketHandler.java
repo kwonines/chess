@@ -64,11 +64,11 @@ public class WebSocketHandler {
 
         Notification notification;
         if (Objects.equals(gameData.whiteUsername(), username)) {
-            notification = new Notification(username + " has joined the game as white");
+            notification = new Notification("\n" + username + " has joined the game as white");
         } else if (Objects.equals(gameData.blackUsername(), username)) {
-            notification = new Notification(username + " has joined the game as black");
+            notification = new Notification("\n" + username + " has joined the game as black");
         } else {
-            notification = new Notification(username + " is observing the game");
+            notification = new Notification("\n" + username + " is observing the game");
         }
 
         connections.add(username, new ConnectionData(username, command.getGameID(), session));
@@ -92,13 +92,13 @@ public class WebSocketHandler {
 
             ChessGame game = gameData.game();
 
-            if (game.getTeamTurn() != userColor) {
-                session.getRemote().sendString(gson.toJson(new WSErrorMessage("Error: not your turn")));
+            if (game.isGameOver()) {
+                session.getRemote().sendString(gson.toJson(new WSErrorMessage("Error: game is over, cannot make moves")));
                 return;
             }
 
-            if (game.isGameOver()) {
-                session.getRemote().sendString(gson.toJson(new WSErrorMessage("Error: game is over, cannot make moves")));
+            if (game.getTeamTurn() != userColor) {
+                session.getRemote().sendString(gson.toJson(new WSErrorMessage("Error: not your turn")));
                 return;
             }
 
