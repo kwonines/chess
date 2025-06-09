@@ -10,10 +10,10 @@ import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class ConnectionManager {
-    private static final ConcurrentHashMap<String, ConnectionData> connections = new ConcurrentHashMap<>();
+    private static final ConcurrentHashMap<String, ConnectionData> CONNECTIONS = new ConcurrentHashMap<>();
 
     public void notify(int gameID, String rootUser, Notification notification) throws IOException {
-        for (var connection : connections.values()) {
+        for (var connection : CONNECTIONS.values()) {
             if (connection.session().isOpen()) {
                 if (!Objects.equals(connection.username(), rootUser) && connection.gameID() == gameID) {
                     String json = new Gson().toJson(notification);
@@ -24,7 +24,7 @@ public class ConnectionManager {
     }
 
     public void sendBoard(int gameID, ChessGame game) throws IOException {
-        for (var connection : connections.values()) {
+        for (var connection : CONNECTIONS.values()) {
             if (connection.session().isOpen()) {
                 if (connection.gameID() == gameID) {
                     String json = new Gson().toJson(new LoadGameMessage(game));
@@ -35,10 +35,10 @@ public class ConnectionManager {
     }
 
     public void add(String username, ConnectionData connection) {
-        connections.put(username, connection);
+        CONNECTIONS.put(username, connection);
     }
 
     public void remove(String username) {
-        connections.remove(username);
+        CONNECTIONS.remove(username);
     }
 }

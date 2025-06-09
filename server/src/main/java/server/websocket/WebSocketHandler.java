@@ -158,7 +158,8 @@ public class WebSocketHandler {
         }
         game.end();
 
-        gameDataAccess.updateGame(command.getGameID(), new GameData(command.getGameID(), gameData.whiteUsername(), gameData.blackUsername(), gameData.gameName(), game));
+        gameDataAccess.updateGame(command.getGameID(),
+                new GameData(command.getGameID(), gameData.whiteUsername(), gameData.blackUsername(), gameData.gameName(), game));
         connections.notify(command.getGameID(), username, new Notification(username + " has resigned"));
         session.getRemote().sendString(gson.toJson(new Notification("You have resigned")));
     }

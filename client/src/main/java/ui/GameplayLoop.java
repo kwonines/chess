@@ -43,22 +43,9 @@ public class GameplayLoop {
                         if (Client.checkForPromotion(move.getStartPosition(), move.getEndPosition())) {
                             System.out.println("Enter piece to promote to ('q' for queen, 'k' for knight, 'b' for bishop, 'r' for rook");
                             String promotionPiece = scanner.nextLine();
-                            switch (promotionPiece) {
-                                case "q":
-                                    move = new ChessMove(move.getStartPosition(), move.getEndPosition(), ChessPiece.PieceType.QUEEN);
-                                    break;
-                                case "k":
-                                    move = new ChessMove(move.getStartPosition(), move.getEndPosition(), ChessPiece.PieceType.KNIGHT);
-                                    break;
-                                case "b":
-                                    move = new ChessMove(move.getStartPosition(), move.getEndPosition(), ChessPiece.PieceType.BISHOP);
-                                    break;
-                                case "r":
-                                    move = new ChessMove(move.getStartPosition(), move.getEndPosition(), ChessPiece.PieceType.ROOK);
-                                    break;
-                                default:
-                                    System.out.println("Unknown input, please try to make the move again");
-                                    continue;
+                            move = getPromotionMove(promotionPiece, move);
+                            if (move == null) {
+                                continue;
                             }
                         }
                         facade.makeMove(new MakeMoveCommand(authToken, gameID, move));
@@ -76,6 +63,27 @@ public class GameplayLoop {
                     System.out.print(">");
             }
         }
+    }
+
+    private static ChessMove getPromotionMove(String promotionPiece, ChessMove move) {
+        switch (promotionPiece) {
+            case "q":
+                move = new ChessMove(move.getStartPosition(), move.getEndPosition(), ChessPiece.PieceType.QUEEN);
+                break;
+            case "k":
+                move = new ChessMove(move.getStartPosition(), move.getEndPosition(), ChessPiece.PieceType.KNIGHT);
+                break;
+            case "b":
+                move = new ChessMove(move.getStartPosition(), move.getEndPosition(), ChessPiece.PieceType.BISHOP);
+                break;
+            case "r":
+                move = new ChessMove(move.getStartPosition(), move.getEndPosition(), ChessPiece.PieceType.ROOK);
+                break;
+            default:
+                System.out.println("Unknown input, please try to make the move again");
+                return null;
+        }
+        return move;
     }
 
     private static ChessMove parseMove(String moveString) {

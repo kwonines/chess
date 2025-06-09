@@ -15,7 +15,7 @@ import static ui.EscapeSequences.*;
 
 public final class Client {
 
-    private static final ServerFacade server = new ServerFacade();
+    private static final ServerFacade SERVER = new ServerFacade();
     private static ChessGame latestGame;
 
     public static void parseMessage(String jsonMessage) {
@@ -133,7 +133,7 @@ public final class Client {
         System.out.println("Enter an email address:");
         String email = scanner.nextLine();
         try {
-            var result = server.register(regUsername, regPassword, email);
+            var result = SERVER.register(regUsername, regPassword, email);
             System.out.println("Register Success! You are now logged in as " + result.username());
             return result.authToken();
         } catch (ResponseException exception) {
@@ -148,7 +148,7 @@ public final class Client {
         System.out.println("Enter password:");
         String logPassword = scanner.nextLine();
         try {
-            var result = server.login(logUsername, logPassword);
+            var result = SERVER.login(logUsername, logPassword);
             System.out.println("Logged in as " + result.username());
             return result.authToken();
         } catch (ResponseException exception) {
@@ -159,7 +159,7 @@ public final class Client {
 
     public static boolean logout(String authToken) {
         try {
-            server.logout(authToken);
+            SERVER.logout(authToken);
             System.out.println("Logged out");
             return true;
         } catch (ResponseException exception) {
@@ -170,7 +170,7 @@ public final class Client {
 
     public static void listGames(String authToken, HashMap<Integer, GameData> games) {
         try {
-            ArrayList<GameData> result = server.listGames(authToken).games();
+            ArrayList<GameData> result = SERVER.listGames(authToken).games();
             games.clear();
             if (result.isEmpty()) {
                 System.out.println("No games to show");
@@ -200,7 +200,7 @@ public final class Client {
         System.out.println("Please enter a name for your game:");
         String gameName = scanner.nextLine();
         try {
-            server.createGame(authToken, gameName);
+            SERVER.createGame(authToken, gameName);
             System.out.println("Game created");
         } catch (ResponseException exception) {
             System.out.println(exception.getMessage());
@@ -209,7 +209,7 @@ public final class Client {
 
     public static void joinGame(String authToken, HashMap<Integer, GameData> games, Scanner scanner) {
         try {
-            ArrayList<GameData> result = server.listGames(authToken).games();
+            ArrayList<GameData> result = SERVER.listGames(authToken).games();
             games.clear();
             if (result.isEmpty()) {
                 System.out.println("There are no games available to join");
@@ -235,11 +235,11 @@ public final class Client {
                 String stringColor = scanner.nextLine();
                 if (Objects.equals(stringColor, "b") || Objects.equals(stringColor, "black")) {
                     PlayerColor.setPlayerColor(ChessGame.TeamColor.BLACK);
-                    server.joinGame(ChessGame.TeamColor.BLACK, games.get(gameNumber).gameID(), authToken);
+                    SERVER.joinGame(ChessGame.TeamColor.BLACK, games.get(gameNumber).gameID(), authToken);
                     new GameplayLoop().run(authToken, games.get(gameNumber).gameID());
                 } else if (Objects.equals(stringColor, "w") || Objects.equals(stringColor, "white")) {
                     PlayerColor.setPlayerColor(ChessGame.TeamColor.WHITE);
-                    server.joinGame(ChessGame.TeamColor.WHITE, games.get(gameNumber).gameID(), authToken);
+                    SERVER.joinGame(ChessGame.TeamColor.WHITE, games.get(gameNumber).gameID(), authToken);
                     new GameplayLoop().run(authToken, games.get(gameNumber).gameID());
                 } else {
                     System.out.println("Error: incorrect color input. Please try again");
@@ -254,7 +254,7 @@ public final class Client {
 
     public static void observeGame(String authToken, HashMap<Integer, GameData> games, Scanner scanner) {
         try {
-            ArrayList<GameData> result = server.listGames(authToken).games();
+            ArrayList<GameData> result = SERVER.listGames(authToken).games();
             games.clear();
             if (result.isEmpty()) {
                 System.out.println("There are no games available to observe");
