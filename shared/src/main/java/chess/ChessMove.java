@@ -23,7 +23,22 @@ public class ChessMove {
 
     @Override
     public String toString() {
-        return "begin {" + startPosition + "} end {" + endPosition + '}';
+        String returnVal = "";
+
+        char[] columns = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'};
+
+        returnVal += columns[startPosition.getColumn() - 1];
+        returnVal += startPosition.getRow();
+        returnVal += "->";
+        returnVal += columns[endPosition.getColumn() - 1];
+        returnVal += endPosition.getRow();
+
+
+        if (promotionPiece != null) {
+            returnVal += " with promotion to " + promotionPiece;
+        }
+
+        return returnVal;
     }
 
     @Override

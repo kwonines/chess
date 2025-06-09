@@ -108,17 +108,22 @@ public class WebSocketHandler {
 
             if (game.isInStalemate(ChessGame.TeamColor.WHITE) || game.isInStalemate(ChessGame.TeamColor.BLACK)) {
                 message += "\nThe game had ended in stalemate";
+                username = null;
                 game.end();
             } else if (game.isInCheckmate(ChessGame.TeamColor.WHITE)) {
                 message += "\n" + gameData.whiteUsername() + " is in checkmate. Black has won!";
+                username = null;
                 game.end();
             } else if (game.isInCheckmate(ChessGame.TeamColor.BLACK)) {
                 message += "\n" + gameData.blackUsername() + " is in checkmate. White has won!";
+                username = null;
                 game.end();
             } else if (game.isInCheck(ChessGame.TeamColor.WHITE)) {
                 message += "\n" + gameData.whiteUsername() + " is in check";
+                username = null;
             } else if (game.isInCheck(ChessGame.TeamColor.BLACK)) {
                 message += "\n" + gameData.blackUsername() + " is in check";
+                username = null;
             }
 
             GameData updatedGame = new GameData(command.getGameID(), gameData.whiteUsername(), gameData.blackUsername(), gameData.gameName(), game);

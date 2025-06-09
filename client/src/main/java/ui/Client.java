@@ -44,6 +44,16 @@ public final class Client {
         System.out.print(">");
     }
 
+    public static boolean checkForPromotion(ChessPosition startPosition, ChessPosition endPosition) {
+        Collection<ChessMove> validMoves = latestGame.validMoves(startPosition);
+        ChessMove promotionMove = new ChessMove(startPosition, endPosition, ChessPiece.PieceType.QUEEN);
+        if (validMoves != null) {
+            return validMoves.contains(promotionMove);
+        } else {
+            return false;
+        }
+    }
+
     public static void highlightMoves(ChessPosition startPosition) {
         ChessGame.TeamColor pov = PlayerColor.getPlayerColor();
         Collection<ChessMove> validMoves = latestGame.validMoves(startPosition);

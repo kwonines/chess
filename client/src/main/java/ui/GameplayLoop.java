@@ -1,6 +1,7 @@
 package ui;
 
 import chess.ChessMove;
+import chess.ChessPiece;
 import chess.ChessPosition;
 import com.google.gson.Gson;
 import websocket.commands.MakeMoveCommand;
@@ -38,11 +39,33 @@ public class GameplayLoop {
                     System.out.print("Enter a move you would like to make (e.g. a1c3)\n>");
                     String moveString = scanner.nextLine();
                     if (moveString.matches("^[a-h][1-8][a-h][1-8]$")) {
-                        MakeMoveCommand command = getMoveCommand(authToken, gameID, moveString);
-                        facade.makeMove(command);
+                        ChessMove move = parseMove(moveString);
+                        if (Client.checkForPromotion(move.getStartPosition(), move.getEndPosition())) {
+                            System.out.println("Enter piece to promote to ('q' for queen, 'k' for knight, 'b' for bishop, 'r' for rook");
+                            String promotionPiece = scanner.nextLine();
+                            switch (promotionPiece) {
+                                case "q":
+                                    move = new ChessMove(move.getStartPosition(), move.getEndPosition(), ChessPiece.PieceType.QUEEN);
+                                    break;
+                                case "k":
+                                    move = new ChessMove(move.getStartPosition(), move.getEndPosition(), ChessPiece.PieceType.KNIGHT);
+                                    break;
+                                case "b":
+                                    move = new ChessMove(move.getStartPosition(), move.getEndPosition(), ChessPiece.PieceType.BISHOP);
+                                    break;
+                                case "r":
+                                    move = new ChessMove(move.getStartPosition(), move.getEndPosition(), ChessPiece.PieceType.ROOK);
+                                    break;
+                                default:
+                                    System.out.println("Unknown input, please try to make the move again");
+                                    continue;
+                            }
+                        }
+                        facade.makeMove(new MakeMoveCommand(authToken, gameID, move));
                         Thread.sleep(50);
                     } else {
-                        System.out.println("The entered value is not a move. Please make sure you enter <START POSITION><END POSITION> (e.g. d3e4)");
+                        System.out.println
+                                ("The entered value is not a move. Please make sure you enter <START POSITION><END POSITION> (e.g. d3e4)\n>");
                     }
                     break;
                 case "highlight":
@@ -55,18 +78,7 @@ public class GameplayLoop {
         }
     }
 
-    public static void highlight(Scanner scanner) {
-        System.out.println("Enter the position for a piece you would like moves highlighted for (e.g. b7)");
-        String coordinate = scanner.nextLine();
-        if (coordinate.matches("^[a-h][1-8]$")) {
-            ChessPosition position = convertToPosition(coordinate);
-            Client.highlightMoves(position);
-        } else {
-            System.out.println("The entered value is not a valid coordinate (e.g. b7 or a3). Pleas try again");
-        }
-    }
-
-    private static MakeMoveCommand getMoveCommand(String authToken, int gameID, String moveString) {
+    private static ChessMove parseMove(String moveString) {
         String coordinates = "";
         coordinates += moveString.charAt(0) - 96;
         coordinates += moveString.charAt(1);
@@ -76,8 +88,18 @@ public class GameplayLoop {
                 new ChessPosition(Character.getNumericValue(coordinates.charAt(1)), Character.getNumericValue(coordinates.charAt(0)));
         ChessPosition endPosition =
                 new ChessPosition(Character.getNumericValue(coordinates.charAt(3)), Character.getNumericValue(coordinates.charAt(2)));
-        ChessMove move = new ChessMove(startPosition, endPosition);
-        return new MakeMoveCommand(authToken, gameID, move);
+        return new ChessMove(startPosition, endPosition);
+    }
+
+    public static void highlight(Scanner scanner) {
+        System.out.println("Enter the position for a piece you would like moves highlighted for (e.g. b7)");
+        String coordinate = scanner.nextLine();
+        if (coordinate.matches("^[a-h][1-8]$")) {
+            ChessPosition position = convertToPosition(coordinate);
+            Client.highlightMoves(position);
+        } else {
+            System.out.println("The entered value is not a valid coordinate (e.g. b7 or a3). Pleas try again");
+        }
     }
 
     private static ChessPosition convertToPosition(String coordinate) {
