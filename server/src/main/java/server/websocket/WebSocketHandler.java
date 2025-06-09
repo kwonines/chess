@@ -104,11 +104,28 @@ public class WebSocketHandler {
 
             game.makeMove(command.getMove());
 
+            String message = username + " made move: " + command.getMove().toString();
+
+            if (game.isInStalemate(ChessGame.TeamColor.WHITE) || game.isInStalemate(ChessGame.TeamColor.BLACK)) {
+                message += "\nThe game had ended in stalemate";
+                game.end();
+            } else if (game.isInCheckmate(ChessGame.TeamColor.WHITE)) {
+                message += "\n" + gameData.whiteUsername() + " is in checkmate. Black has won!";
+                game.end();
+            } else if (game.isInCheckmate(ChessGame.TeamColor.BLACK)) {
+                message += "\n" + gameData.blackUsername() + " is in checkmate. White has won!";
+                game.end();
+            } else if (game.isInCheck(ChessGame.TeamColor.WHITE)) {
+                message += "\n" + gameData.whiteUsername() + " is in check";
+            } else if (game.isInCheck(ChessGame.TeamColor.BLACK)) {
+                message += "\n" + gameData.blackUsername() + " is in check";
+            }
+
             GameData updatedGame = new GameData(command.getGameID(), gameData.whiteUsername(), gameData.blackUsername(), gameData.gameName(), game);
             gameDataAccess.updateGame(command.getGameID(), updatedGame);
 
-            connections.notify(command.getGameID(), username, new Notification(username + " made move: " + command.getMove().toString()));
             connections.sendBoard(command.getGameID(), game);
+            connections.notify(command.getGameID(), username, new Notification(message));
         } catch (InvalidMoveException e) {
             session.getRemote().sendString(gson.toJson(new WSErrorMessage("Error: invalid move")));
         }
