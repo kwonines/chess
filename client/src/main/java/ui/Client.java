@@ -26,10 +26,10 @@ public final class Client {
                 LoadGameMessage loadMessage = gson.fromJson(jsonMessage, LoadGameMessage.class);
                 System.out.println();
                 if (loadMessage.game() == null) {
-                    drawBoard(latestGame.getBoard(), PlayerColor.getPlayerColor());
+                    drawBoard();
                 } else {
                     latestGame = loadMessage.game();
-                    drawBoard(latestGame.getBoard(), PlayerColor.getPlayerColor());
+                    drawBoard();
                 }
                 break;
             case NOTIFICATION:
@@ -215,14 +215,12 @@ public final class Client {
         }
     }
 
-    private static void drawBoard(ChessBoard board, ChessGame.TeamColor color) {
+    private static void drawBoard() {
+        ChessGame.TeamColor color = PlayerColor.getPlayerColor();
+        ChessBoard board = latestGame.getBoard();
         char[] columns = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'};
         if (color == ChessGame.TeamColor.WHITE) {
-            System.out.print(EMPTY);
-            for (int i = 0; i < 8; i++) {
-                System.out.print(FRONT_SPACER + columns[i] + END_SPACER);
-            }
-            System.out.println();
+            drawWhiteColumnLetters(columns);
             for (int row = 8; row > 0; row--) {
                 System.out.print(" " + (row) + " ");
                 for (int col = 1; col < 9; col++) {
@@ -231,17 +229,9 @@ public final class Client {
                 System.out.print(RESET_BG_COLOR + " " + (row) + " ");
                 System.out.println();
             }
-            System.out.print(EMPTY);
-            for (int i = 0; i < 8; i++) {
-                System.out.print(FRONT_SPACER + columns[i] + END_SPACER);
-            }
-            System.out.println();
+            drawWhiteColumnLetters(columns);
         } else {
-            System.out.print(EMPTY);
-            for (int i = 7; i >= 0; i--) {
-                System.out.print(FRONT_SPACER + columns[i] + END_SPACER);
-            }
-            System.out.println();
+            drawBlackColumnLetters(columns);
             for (int row = 1; row < 9; row++) {
                 System.out.print(" " + (row) + " ");
                 for (int col = 8; col > 0; col--) {
@@ -250,12 +240,24 @@ public final class Client {
                 System.out.print(RESET_BG_COLOR + " " + (row) + " ");
                 System.out.println();
             }
-            System.out.print(EMPTY);
-            for (int i = 7; i >= 0; i--) {
-                System.out.print(FRONT_SPACER + columns[i] + END_SPACER);
-            }
-            System.out.println();
+            drawBlackColumnLetters(columns);
         }
+    }
+
+    private static void drawBlackColumnLetters(char[] columns) {
+        System.out.print(EMPTY);
+        for (int i = 7; i >= 0; i--) {
+            System.out.print(FRONT_SPACER + columns[i] + END_SPACER);
+        }
+        System.out.println();
+    }
+
+    private static void drawWhiteColumnLetters(char[] columns) {
+        System.out.print(EMPTY);
+        for (int i = 0; i < 8; i++) {
+            System.out.print(FRONT_SPACER + columns[i] + END_SPACER);
+        }
+        System.out.println();
     }
 
     public static void highlightMoves(ChessPosition startPosition) {
@@ -274,11 +276,7 @@ public final class Client {
         }
         char[] columns = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'};
         if (color == ChessGame.TeamColor.WHITE) {
-            System.out.print(EMPTY);
-            for (int i = 0; i < 8; i++) {
-                System.out.print(FRONT_SPACER + columns[i] + END_SPACER);
-            }
-            System.out.println();
+            drawWhiteColumnLetters(columns);
             for (int row = 8; row > 0; row--) {
                 System.out.print(" " + (row) + " ");
                 for (int col = 1; col < 9; col++) {
@@ -287,17 +285,9 @@ public final class Client {
                 System.out.print(RESET_BG_COLOR + " " + (row) + " ");
                 System.out.println();
             }
-            System.out.print(EMPTY);
-            for (int i = 0; i < 8; i++) {
-                System.out.print(FRONT_SPACER + columns[i] + END_SPACER);
-            }
-            System.out.println();
+            drawWhiteColumnLetters(columns);
         } else {
-            System.out.print(EMPTY);
-            for (int i = 7; i >= 0; i--) {
-                System.out.print(FRONT_SPACER + columns[i] + END_SPACER);
-            }
-            System.out.println();
+            drawBlackColumnLetters(columns);
             for (int row = 1; row < 9; row++) {
                 System.out.print(" " + (row) + " ");
                 for (int col = 8; col > 0; col--) {
@@ -306,11 +296,7 @@ public final class Client {
                 System.out.print(RESET_BG_COLOR + " " + (row) + " ");
                 System.out.println();
             }
-            System.out.print(EMPTY);
-            for (int i = 7; i >= 0; i--) {
-                System.out.print(FRONT_SPACER + columns[i] + END_SPACER);
-            }
-            System.out.println();
+            drawBlackColumnLetters(columns);
         }
         System.out.print(">");
     }
